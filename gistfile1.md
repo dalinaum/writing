@@ -119,7 +119,7 @@ $ adb bugreport > bugreport.txt
 
 상세 카테고리와 우선 순위는 Notification(http://developer.android.com/reference/android/app/Notification.html)을 참고한다.
 
-## 단아한 스몰 아이콘
+## 단아한 아이콘
 
 롤리팝에서 노티피케이션 아이콘의 정책도 변경되었다. 스몰 아이콘의 색상이 흰색과 투명색 만 쓸 수 있는 것이 제약이다. 현재는 어플리케이션의 타겟 버전과 단말기의 환경에 따라 다르게 보이지만 롤리팝 이후의 환경을 고려할 때 스몰 아이콘은 흰색과 투명색으로만 디자인 하는 것이 적절하다. 롤리팝의 스몰 아이콘은 `setColor`을 호출하여 배경색상을 정할 수 있으니 단색 아이콘과 배경 색상의 조화를 고려하는 것이 좋다.
 
@@ -136,4 +136,13 @@ Notification notif = builder.build();
 dependencies {
   compile 'com.android.support:appcompat-v7:21.0.3'
 }
+````
+
+
+## 오버뷰
+
+최근 화면(recents screen)이 오버뷰(overview)로 변경되었다. 단순이 이름만 변경된 것이 아니라 3차원으로 렌더링 된 박스 안에 해당 문서의 개성을 표현하도록 변경되었다. 롤리팝의 대응 액티비티는 고유의 색상을 표출하는데 웹 사이트 역시 자신의 개성을 표현할 수 있다. 웹 문서에 아래의 메타데이터를 추가하자.
+
+````
+<meta name="theme-color" content="#3FFFB5">
 ````
