@@ -36,7 +36,7 @@ JobService mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCH
 mJobService.scheduleJob(job);
 ````
 
-더 상세한 `JobInfo` 파라미터를 파악하려 JobInfo.Builder(https://developer.android.com/reference/android/app/job/JobInfo.Builder.html)를 참고하라.
+더 상세한 `JobInfo` 파라미터를 파악하려 JobInfo.Builder(https://developer.android.com/reference/android/app/job/JobInfo.Builder.html) 를 참고하라.
 
 ### JobService 확장하기
 
@@ -94,7 +94,7 @@ Battery stats reset.
 $ adb bugreport > bugreport.txt
 ````
 
- * 참고: 추출된 버그리포트의 분석을 돕는 툴 Battery Historian(https://github.com/google/battery-historian)을 구글이 공개하였으나 현재 제대로 동작하지 않고 있다. 리포지토리의 업데이트를 확인하여 적용한다.
+ * 참고: 추출된 버그리포트의 분석을 돕는 툴 Battery Historian(https://github.com/google/battery-historian) 을 구글이 공개하였으나 현재 제대로 동작하지 않고 있다. 리포지토리의 업데이트를 확인하여 적용한다.
 
 
 ## 노티피케이션
@@ -103,7 +103,7 @@ $ adb bugreport > bugreport.txt
 
 ![](http://developer.android.com/images/versions/notification-headsup.png)
 
-## 락스크린의 프라이버시
+### 락스크린의 프라이버시
 
 락 스크린 상태에서 노티피케이션 가시성은 3단계로 나뉘어 구분된다.
 
@@ -113,7 +113,7 @@ $ adb bugreport > bugreport.txt
 
 사용자에게 민감한 노티피케이션은 `Notification.builder.setVisibility(VISIBILITY_PRIVATE)`나 `VISIBILITY_SECRET`으로 분류하여 프라이버시를 강화할 수 있다.
 
-## 강화된 메타 데이터
+### 강화된 메타 데이터
 
 노티피케이션의 메타 데이터도 더 세밀해져 설정할 수 있어 메타 데이터에 맞추어 운영체제가 노티피케이션을 정리해서 보여줄 수 있다.
 
@@ -123,7 +123,7 @@ $ adb bugreport > bugreport.txt
 
 상세 카테고리와 우선 순위는 Notification(http://developer.android.com/reference/android/app/Notification.html)을 참고한다.
 
-## 단아한 아이콘
+### 단아한 아이콘
 
 롤리팝에서 노티피케이션 아이콘의 정책도 변경되었다. 스몰 아이콘의 색상이 흰색과 투명색 만 쓸 수 있는 것이 제약이다. 현재는 어플리케이션의 타겟 버전과 단말기의 환경에 따라 다르게 보이지만 롤리팝 이후의 환경을 고려할 때 스몰 아이콘은 흰색과 투명색으로만 디자인 하는 것이 적절하다. 롤리팝의 스몰 아이콘은 `setColor`을 호출하여 배경색상을 정할 수 있으니 단색 아이콘과 배경 색상의 조화를 고려하는 것이 좋다.
 
@@ -141,6 +141,42 @@ dependencies {
   compile 'com.android.support:appcompat-v7:21.0.3'
 }
 ````
+
+### RemoteControlClient의 폐기
+
+`RemoteControlClient`가 폐기됨에 따라 음악 재생 앱 등의 노티피케이션의 변경이 요구된다. 노티피케이션 스타일 `Notification.MediaStyle`을 이용한다. 
+
+````
+Notification.Builder builder = new Notification.Builder(this)
+    .setSmallIcon(R.drawable.ic_launcher)
+    .setContentTitle("마이크로소프트웨어")
+    .setContentText("안드로이드 롤리팝")
+    .setDeleteIntent(pendingIntent)
+    .setStyle(new Notification.MediaStyle());
+````
+
+`MediaSessionManager` 서비스를 얻어 세션을 등록하고 토큰을 설정한다. 
+
+````
+mManager = (MediaSessionManager) getSystemService(Context.MEDIA_SESSION_SERVICE);
+mSession = mManager.createSession("microsoftware session");
+mController = MediaController.fromToken(mSession.getSessionToken());
+````
+
+세션의 `TransportControlsCallback`을 등록하고, 각 상황에 따라 다른 노티피케이션을 생성하도록 `onPlay`, `onPause` 등의 메서드를 오버라이드한다.
+
+````
+mSession.addTransportControlsCallback(new MediaSession.TransportControlsCallback() {
+    @Override
+    public void onPlay() {}
+
+    @Override
+    public void onPause() {}
+    ...
+}
+````
+
+노티피케이션의 액션을 다른 서비스로 연결시키고 해당 서비스에서 `mController.getTransportControls().play()` 등을 호출 한다.
 
 
 ## 오버뷰
@@ -161,4 +197,49 @@ startActivity(intent);
 
 ````
 <meta name="theme-color" content="#3FFFB5">
+````
+
+
+## 런타임 엔진 ART
+
+![](http://en.wikipedia.org/wiki/Android_Runtime#mediaviewer/File:ART_view.png)
+
+초기 안드로이드에 탑재된 가상 머신 달빅(Dalvik)은 모바일 환경을 고려해서 적은 메모리, 최적화된 리소스 관리, 최소화 오버헤드 등이 목표였다. 자주 수행되는 구간(트레이스, trace)을 기계어 코드로 바꾸는 JIT (Just-in-time) 컴파일러는 안드로이드 프로요(2.2) 버전에서야 도입되었다. 달빅의 기본 전략은 달빅 바이트코드(Dalvik bytecode)로 된 코드를 한줄 씩 해석하는 것이며, 반복 수행되는 구간(트레이스, trace)를 기계어 코드로 변환하여 효율을 높이는 구조이다. 트레이스라 불리는 특정 구간을 번역하는 작업은 메소드 단위로 기계어로 변환하는 것보다 시간은 짧게 걸리고 변환된 기계어 코드의 용량이 적기 때문에 메모리가 적고 CPU 파워가 낮은 상황에 적합해던 방식이다. 반면에 모바일을 위한 경량 가상 머신에서 시작한 달빅은 구조적인 한계는 있다.
+
+구글은 안드로이드 킷캣 버전 부터 ART(Android Runtime)를 준비했고 롤리팝 버전 부터는 강제 사항이 되었다. ART는 AOT(ahead-of-time) 방식의 런타임 환경이다. ART의 내장된 dex2oat 유틸리티는 달빅에서 쓰이던 달빅 바이트코드와 리소스 파일이 통합된 .dex 파일을 리눅스에서 널리 쓰이는 실행파일인 형태인 ELF (Executable and Linkable Format)로 변환한다. dex2oat는 앱의 초기 수행시 호출되며 ART의 AOT는 앱의 최초 수행 과정에 dex2oat 유틸리티를 이용하여 실행 파일을 얻어내는 기술인 셈이다. 이로 인해 롤리팝은 수행 성능, 가비지 컬렉션(GC, Garbage collection)의 성능, 프로파일링, 디버깅 등에서 이점을 얻었다.
+
+새로운 방식이 적용되었기 때문에 앱에 따라 문제가 발생할 수 있고 AOT에 관련된 이슈는 안드로이드 이슈 리스트(https://code.google.com/p/android/issues/list) 를 자주 참고하면서 해결해야 한다.
+
+### 성급한 GC 최적화
+
+GC의 구조가 변경되었기 때문에 `GC_FOR_ALLOC` 이벤트가 발생하는 빈도를 줄이기 위해 명시적으로 `System.gc()`를 호출할 필요가 없어졌다. 현재 환경이 달빅이 아닌 ART인 것을 환영하기 위해 다음 커맨드를 이용해서 버전 정보를 얻는다.
+
+````
+System.getProperty("java.vm.version")
+````
+
+버전 정보가 2.0.0 이상인 경우 명시적인 GC 호출이 필요가 없다.
+
+### JNI 디버깅
+
+ART의 채택에 따라 기존에 잘 동작하던 JNI 앱의 동작에 문제가 생길 수 있다. JNI의 동작에 문제가 있는 경우 안드로이드에 포함된 CheckJNI 툴이 도움이 된다.
+
+````
+$ adb shell setprop debug.checkjni 1
+````
+
+환경이 설정되면 JNI 코드 수행에서 경고나 에러 메시지를 볼 수 있다.
+
+````
+W JNI WARNING: method declared to return 'Ljava/lang/String;' returned '[B'
+W              failed in LJniTest;.exampleJniBug
+I "main" prio=5 tid=1 RUNNABLE
+I   | group="main" sCount=0 dsCount=0 obj=0x40246f60 self=0x10538
+I   | sysTid=15295 nice=0 sched=0/0 cgrp=default handle=-2145061784
+I   | schedstat=( 398335000 1493000 253 ) utm=25 stm=14 core=0
+I   at JniTest.exampleJniBug(Native Method)
+I   at JniTest.main(JniTest.java:11)
+I   at dalvik.system.NativeStart.main(Native Method)
+I 
+E VM aborting
 ````
