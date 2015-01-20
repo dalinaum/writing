@@ -32,6 +32,36 @@ JobService mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCH
 mJobService.scheduleJob(job);
 ````
 
-더 상세한 `JobInfo` 파라미터를 파악하기 위해 [^JobInfo.Builder][] 
+더 상세한 `JobInfo` 파라미터를 파악하려 JobInfo.Builder https://developer.android.com/reference/android/app/job/JobInfo.Builder.html 를 참고하라.
 
-[^JobInfo.Builder]: https://developer.android.com/reference/android/app/job/JobInfo.Builder.html
+## JobService 확장하기
+
+`JobService`가 일반적인 작업을 수행하는데 충분하지만 확장을 원할 수 있다. `JobService`는 오버라이딩 가능한 메소드 `onStartJob`와 `onStopJob`가 있으며 이를 통해 조금 더 세밀한 조작이 가능하다.
+
+`JobService`의 확장을 위해서는 `AndroidManifest.xml`에 새로운 서비스를 등록해야 한다.
+
+````
+ <service
+ android:name="kr.co.imaso.MasoJobService"
+ android:permission="android.permission.BIND_JOB_SERVICE"
+ android:exported="true" />
+````
+
+`onStartJob`은 작업이 시작될 때 호출되며 별도로 수행할 작업이 등록되어야 하는 곳이고 `onStopJob`은 작업이 끝날 때 호출되는 곳이다. `onStartJob`이 리턴되기 전에 추가적으로 해야할 일을 수행하자. 
+
+````
+public class MasoJobService extends JobService {
+
+    @Override
+    public boolean onStartJob(JobParameters jobParameters) {
+        // FIXME: 작업
+        return true;
+    }
+
+    @Override
+    public boolean onStopJob(JobParameters params) {
+        return false;
+    }
+}
+
+````
