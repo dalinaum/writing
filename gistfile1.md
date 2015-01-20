@@ -243,3 +243,39 @@ I   at dalvik.system.NativeStart.main(Native Method)
 I 
 E VM aborting
 ````
+
+### Compacting GC
+
+기존 안드로이드에서는 할당된 메모리 블록의 주소 값이 변경되는 경우는 없었다. 메모리 사용의 효율을 높이기 위해 안드로이드 ART는 할당된 메모리 블록을 정리하는 Compacting GC를 도입하고 있다. 이로 인해 할당된 메모리 블록의 주소가 변경될 수 있다. `Get<type>ArrayElements`를 호촐하여 얻은 경우 올바르게 `Release<type>ArrayElements()`를 호출해야 하며 주소의 값은 변경될 수 있다는 것을 유의해야 한다.
+
+### Object 모델 변경
+
+Object 클래스의 필드 속성이 private으로 변경되었다. Object 필드를 Reflection으로 접근하는 경우에 문제가 될 수 있다. 
+
+
+## 중복된 커스터 퍼미션 선언 문제
+
+````
+<permission android:name= "com.example.gcm.permission.C2D_MESSAGE"
+  android:protectionLevel="signature" />
+````
+
+안드로이드 5.0부터 커스텀 퍼미션은 동일한 사인키를 가진 앱에서만 사용할 수 있도록 변경되었다. 같은 퍼미션을 사용하고 있는 앱이 다른 사인키를 가지고 있다면 아래의 `INSTALL_FAILED_DUPLICATE_PERMISSION` 메시지와 함께 설치가 거부된다. 이 변경 사항은 앱의 `targetSDK` 버전과는 무관하며 롤리팝 디바이스에서는 강제로 적용되는 사항이다.
+
+기본 퍼미션으로 가능하다면 가능한 커스텀 퍼미션을 쓰지 않는 것이 좋다. 커스텀 퍼미션을 반드시 써야 한다면 패키지 명을 붙여 다른 커스텀 퍼미션과 충돌하지 않도록 관리하며 여러 앱에서 사용해야 한다면 사인키를 잘 관리해야 한다.
+
+## 명시적인 서비스 바인드
+
+서비스 바인드를 할때 명시적인 인텐트만 가능하도록 바뀌었다. 아래와 같이 암묵적인 바인드를 요청할 경우 예외가 발생한다.
+
+````
+Intent intent = new Intent(MICROSOFTWARE_BINDING);
+bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+````
+
+제대로 된 바인드는 아래와 같다.
+
+````
+Intent intent = new Intent(this, MicroSoftwareService.class);
+bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+````
