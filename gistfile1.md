@@ -32,7 +32,7 @@ JobService mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCH
 mJobService.scheduleJob(job);
 ````
 
-더 상세한 `JobInfo` 파라미터를 파악하려 JobInfo.Builder https://developer.android.com/reference/android/app/job/JobInfo.Builder.html 를 참고하라.
+더 상세한 `JobInfo` 파라미터를 파악하려 JobInfo.Builder(https://developer.android.com/reference/android/app/job/JobInfo.Builder.html)를 참고하라.
 
 ## JobService 확장하기
 
@@ -90,4 +90,4 @@ Battery stats reset.
 $ adb bugreport > bugreport.txt
 ````
 
- * 참고: 추출된 버그리포트를 분석하기 위해서는 툴 battery historian https://github.com/google/battery-historian 이 공개되어 있으나 현재는 제대로 동작하지 않고 있다.
+ * 참고: 추출된 버그리포트를 분석하기 위해서는 툴 battery historian(https://github.com/google/battery-historian)이 공개되어 있으나 현재는 제대로 동작하지 않고 있다.
