@@ -202,7 +202,7 @@ startActivity(intent);
 
 ## 런타임 엔진 ART
 
-![](http://en.wikipedia.org/wiki/Android_Runtime#mediaviewer/File:ART_view.png)
+![](http://upload.wikimedia.org/wikipedia/commons/2/25/ART_view.png)
 
 초기 안드로이드에 탑재된 가상 머신 달빅(Dalvik)은 모바일 환경을 고려해서 적은 메모리, 최적화된 리소스 관리, 최소화 오버헤드 등이 목표였다. 자주 수행되는 구간(트레이스, trace)을 기계어 코드로 바꾸는 JIT (Just-in-time) 컴파일러는 안드로이드 프로요(2.2) 버전에서야 도입되었다. 달빅의 기본 전략은 달빅 바이트코드(Dalvik bytecode)로 된 코드를 한줄 씩 해석하는 것이며, 반복 수행되는 구간(트레이스, trace)를 기계어 코드로 변환하여 효율을 높이는 구조이다. 트레이스라 불리는 특정 구간을 번역하는 작업은 메소드 단위로 기계어로 변환하는 것보다 시간은 짧게 걸리고 변환된 기계어 코드의 용량이 적기 때문에 메모리가 적고 CPU 파워가 낮은 상황에 적합해던 방식이다. 반면에 모바일을 위한 경량 가상 머신에서 시작한 달빅은 구조적인 한계는 있다.
 
