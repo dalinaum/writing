@@ -279,3 +279,93 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 Intent intent = new Intent(this, MicroSoftwareService.class);
 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 ````
+
+## 머터리얼 디자인
+
+![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7S1dwdXNVa1B1OHc/components_cards6.png)
+
+구글의 통합 디자인 언어 머터러일 디자인이 안드로이드에 통합되었다. 잉크와 종이를 컨셉으로 한 다양한 UX 컨셉이 도입되었고 그에 따라 변화된 부분도 많이 존재한다. `appcompat` 라이브러리를 통해 기존 라이브러리에서 기존 안드로이드 버전에서도 머터리얼 디자인을 부분적으로 적용할 수 있게 되었다. 시각적인 부분은 적용이 가능해졌으나 에니메이션 등의 특징들은 구형 안드로이드 장비에서 구현이 불가능한 부분들이 있다. 롤리팝은 렌더링 스레드가 추가되었는데 렌더링 스레드가 의존적인 에니메이션은 백포팅이 불가능하기 때문이다. 머터리얼 디자인을 적용할 때 시각적인 부분과 에니메이션 적인 부분을 나누어 에니메이션 부분은 안드로이드 버전 별로 어떻게 대응해야 할지 고민이 필요하다.
+
+### 머터리얼 테마
+
+`Theme.AppCompat`를 확장한 경우 `colorPrimary`, `colorPrimaryDark`, `colorAccent` 등의 색상을 설정해야 한다. `Theme.AppCompat`를 위한 색상의 설정에서는 `android:` 접두어가 붙지 않는다.
+
+````
+<style name="Theme.MyTheme" parent="Theme.AppCompat.Light">
+    <item name="colorPrimary">@color/material_blue_500</item>
+    <item name="colorPrimaryDark">@color/material_blue_700</item>
+    <item name="colorAccent">@color/material_green_A200</item>
+</style>
+````
+
+### 액션바의 폐기
+
+안드로이드 허니콤 버전(3.0)부터 적용되었던 액션 바가 폐기되었다. 액션바는 구글이 허니콤 이후로 정착시키려는 가이드라인의 핵심이었고 가이드라인을 강제하기 위해 커스터마이징이 어렵게 되어있었다. 액션바가 폐기되고 툴바가 들어온 것은 머터리얼 디자인에서는 조금 더 다양한 시도를 할 수 있도록 문을 열어줬다고 볼 수 있다.
+
+툴바를 사용하기 위해서 먼저 `appcompat` 라이브러리가 표함되어야 한다.
+
+````
+dependencies {
+    compile "com.android.support:appcompat-v7:21.0.3"
+}
+````
+
+툴바를 사용하기 위해서는 먼저 액티비티는 `ActionBarActivity`를 상속받고 테마는 `Theme.AppCompat`를 상속받아야 한다.
+
+`ActionBarActivity`의 레이아웃에 `Toolbar`를 추가한다.
+
+````
+<android.support.v7.widget.Toolbar
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:background="?attr/colorPrimary" />
+````
+
+레이아웃에 `Toolbar`를 추가한 후 액티비티에 연결하는 방법은 두가지가 있다.
+
+ 1. 액션바 처럼 연결하기.
+ 2. 그냥 연결하기.
+
+액션바 처럼 연결하는 것은 `setSupportActionBar` 메서드를 이용하는 것이다.
+
+````
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.microsoftware_layout);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+}
+````
+
+또 다른 방법은 툴바의 `setOnMenuItemClickListener`와 `inflateMenu`를 이용하는 방법이다.
+
+````
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.microsoftware_layout);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+    // Set an OnMenuItemClickListener to handle menu item clicks
+    toolbar.setOnMenuItemClickListener(
+            new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    // Handle the menu item
+                    return true;
+                }
+    });
+
+    // Inflate a menu to be displayed in the toolbar
+    toolbar.inflateMenu(R.menu.microsoftware_menu);
+}
+````
+
+### 
+
