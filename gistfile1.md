@@ -38,7 +38,7 @@ mJobService.scheduleJob(job);
 
 ### JobService 확장하기
 
-`JobService`가 일반적인 작업을 수행하는데 충분하지만 확장을 원할 수 있다. `JobService`는 오버라이딩 가능한 메소드 `onStartJob`와 `onStopJob`가 있으며 이를 통해 조금 더 세밀한 조작이 가능하다.
+`JobService`가 일반적인 작업을 수행하는데 충분하지만 확장을 원할 수 있다. `JobService`는 오버라이딩 가능한 메소드 `onStartJob`와 `onStopJob`를 가지며 이를 수정하여 조금 더 세밀하게 작업을 조율할 수 있다.
 
 `JobService`의 확장을 위해서는 `AndroidManifest.xml`에 새로운 서비스를 등록해야 한다.
 
@@ -93,3 +93,22 @@ $ adb bugreport > bugreport.txt
 ````
 
  * 참고: 추출된 버그리포트의 분석을 돕는 툴 Battery Historian(https://github.com/google/battery-historian)을 구글이 공개하였으나 현재 제대로 동작하지 않고 있다. 리포지토리의 업데이트를 확인하여 적용한다.
+
+
+## 노티피케이션
+
+노티피케이션은 조금 더 세심하고 강력하고 까탈스러워졌다. 휴대폰을 잠그어 두었지만 민감한 메신저 채팅이 보였던 나쁜 기억은 더 이상 떠올리지 않아도 된다. 알록달록한 노티피케이션, `RemoteControlClient`를 이용한 화려한 커스터마이징을 즐겼다면 앞으로는 그만큼의 자유를 만끽하기는 어렵다.
+
+락 스크린 상태에서 노티피케이션 가시성은 3단계로 나뉘어 구분된다.
+
+ * `VISIBILITY_PRIVATE` - 노티피케이션 아이콘과 같은 기본적인 정보만 표출되며 상세한 내용은 감추어 진다.
+ * `VISIBILITY_PUBLIC` - 노티피케이션의 컨텐츠가 보인다.
+ * `VISIBILITY_SECRET` - 아이콘을 포함하여 아무 것도 보이지 않는다.
+
+사용자에게 민감한 노티피케이션은 `Notification.builder.setVisibility(VISIBILITY_PRIVATE)`나 `VISIBILITY_SECRET`으로 분류하여 프라이버시를 강화할 수 있다.
+
+노티피케이션의 메타 데이터도 더 세밀해져 설정할 수 있어 메타 데이터에 맞추어 운영체제가 노티피케이션을 정리해서 보여줄 수 있다.
+
+ * `setCategory()` - 운영체제가 우선 순위에 따라 어떻게 처리할지 힌트를 줄 수 있다. (노티피케이션이 전화, 메시지, 알람 등에 연관이 있다 설정할 수 있다.)
+ * `setPriority()` - 노티피케이션의 우선 순위를 변경할 수 있어 덜 중요한 정보와 더 중요한 정보를 분리할 수 있다. `PRIORITY_MAX`와 `PRIORITY_HIGH`의 경우에는 작게 떠 있는 화면으로 뜨게 되며 노티피케이션이 소리나 진동을 갖게 된다.
+ * `addPerson()` - 노티피케이션의 대상을 한 사람 이상 설정할 수 있다. 특정 사람에게 노티를 보낼 수도 있고 여러 사람에게 중요한 노티를 보낼 수도 
