@@ -1,8 +1,10 @@
-# 배터리 효율
+# 안드로이드 롤리팝 개발 따라잡기
+
+## 배터리 효율
 
 구글은 젤리빈(4.1) 이후 안드로이드 주요 업데이트 마다 프로젝트를 하나씩 진행했다. 젤리빈은 프로젝트 버터(Project Butter)를 통해 쾌적한 사용자 경험을 얻었다. 킷캣(4.4)은 프로젝트 스벨트(Project Svelte)를 통해 512MiB(Mebibyte) 메모리 환경에서도 수행할 수 있는 날렵한 몸을 얻었다. 안드로이드의 최신 버전 롤리팝(5.0)은 프로젝트 볼타(Project Volta)를 통해 조금 더 적은 전력을 쓰게 되었고 어플리케이션의 효율을 높일 여러 방법도 마련했다.
 
-## JobScheduler
+### JobScheduler
 
 상황에 대한 고려가 없는 비동기 작업은 배터리 효율에 부정적이다. 네트워크가 안정적이지 않은 상황에 사용자가 촬영해둔 사진을 서버로 백업하면 휴대폰의 배터리가 금방 끝날 수 있다. 네트워크가 안정적일 때나 충전 중에 사진을 업로드하는 것이 훨씬 효율적이다. 롤리팝은 JobScheduler API를 도입하여 배터리와 네트워크 상황에 따라 적절한 작업 계획을 잡을 수 있도록 한다.
 
@@ -34,7 +36,7 @@ mJobService.scheduleJob(job);
 
 더 상세한 `JobInfo` 파라미터를 파악하려 JobInfo.Builder(https://developer.android.com/reference/android/app/job/JobInfo.Builder.html)를 참고하라.
 
-## JobService 확장하기
+### JobService 확장하기
 
 `JobService`가 일반적인 작업을 수행하는데 충분하지만 확장을 원할 수 있다. `JobService`는 오버라이딩 가능한 메소드 `onStartJob`와 `onStopJob`가 있으며 이를 통해 조금 더 세밀한 조작이 가능하다.
 
@@ -66,7 +68,7 @@ public class MasoJobService extends JobService {
 
 ````
 
-## 배터리 상태
+### 배터리 상태
 
 어플리케이션이 수행 후에 배터리의 상황은 계속 변화한다. 안드로이드 롤리팝은 배터리 상황 개괄을 확인할 수 있는 명령을 제공한다.
 
