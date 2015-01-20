@@ -32,6 +32,6 @@ JobService mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCH
 mJobService.scheduleJob(job);
 ````
 
-더 상세한 `JobInfo` 파라미터를 파악하기 위해 [JobInfo.Builder][] 
+더 상세한 `JobInfo` 파라미터를 파악하기 위해 [^JobInfo.Builder][] 
 
-[JobInfo.Builder]: https://developer.android.com/reference/android/app/job/JobInfo.Builder.html
+[^JobInfo.Builder]: https://developer.android.com/reference/android/app/job/JobInfo.Builder.html
