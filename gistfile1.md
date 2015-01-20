@@ -1,6 +1,6 @@
 # 안드로이드 롤리팝 개발 따라잡기
 
-http://developer.android.com/images/home/l-hero_2x.png
+![](http://developer.android.com/images/home/l-hero_2x.png)
 
 ## 배터리 효율
 
@@ -101,7 +101,7 @@ $ adb bugreport > bugreport.txt
 
 노티피케이션은 조금 더 세심하고 강력하고 까탈스러워졌다. 휴대폰을 잠그어 두었지만 민감한 메신저 채팅이 보였던 나쁜 기억은 더 이상 떠올리지 않아도 된다. 알록달록한 노티피케이션, `RemoteControlClient`를 이용한 화려한 커스터마이징을 즐겼다면 앞으로는 그만큼의 자유를 만끽하기는 어렵다.
 
-http://developer.android.com/images/versions/notification-headsup.png
+![](http://developer.android.com/images/versions/notification-headsup.png)
 
 ## 락스크린의 프라이버시
 
@@ -145,7 +145,7 @@ dependencies {
 
 ## 오버뷰
 
-http://developer.android.com/images/versions/recents_screen_2x.png
+![](http://developer.android.com/images/versions/recents_screen_2x.png)
 
 최근 화면(recents screen)이 오버뷰(overview)로 변경되었다. 최근 작업들은 3D로 개성있게 렌더링되며 여러 문서와 탭을 쉽게 이동할 수 있도록 `AppTask`를 모두 표출한다. 웹 브라우저의 탭들을 오버뷰를 통해 이동할 수 있고 구글 독스의 여러 문서를 오버뷰 스크린에서 이동할 수 있는 것이다.
 
