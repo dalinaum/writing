@@ -92,4 +92,4 @@ Battery stats reset.
 $ adb bugreport > bugreport.txt
 ````
 
- * 참고: 추출된 버그리포트를 분석하기 위해서는 툴 battery historian(https://github.com/google/battery-historian)이 공개되어 있으나 현재는 제대로 동작하지 않고 있다.
+ * 참고: 추출된 버그리포트의 분석을 돕는 툴 Battery Historian(https://github.com/google/battery-historian)을 구글이 공개하였으나 현재 제대로 동작하지 않고 있다. 리포지토리의 업데이트를 확인하여 적용한다.
