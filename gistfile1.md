@@ -141,7 +141,17 @@ dependencies {
 
 ## 오버뷰
 
-최근 화면(recents screen)이 오버뷰(overview)로 변경되었다. 단순이 이름만 변경된 것이 아니라 3차원으로 렌더링 된 박스 안에 해당 문서의 개성을 표현하도록 변경되었다. 롤리팝의 대응 액티비티는 고유의 색상을 표출하는데 웹 사이트 역시 자신의 개성을 표현할 수 있다. 웹 문서에 아래의 메타데이터를 추가하자.
+최근 화면(recents screen)이 오버뷰(overview)로 변경되었다. 최근 작업들은 3D로 개성있게 렌더링되며 여러 문서와 탭을 쉽게 이동할 수 있도록 `AppTask`를 모두 표출한다. 웹 브라우저의 탭들을 오버뷰를 통해 이동할 수 있고 구글 독스의 여러 문서를 오버뷰 스크린에서 이동할 수 있는 것이다.
+
+새로운 도큐먼트를 생성하기 위해서는 `android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT` 플래그를 포함하여 액티비티를 호출한다.
+
+````
+Intent intent = new Intent(this, MicroSoftware.class);
+intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+startActivity(intent);
+````
+
+웹 사이트 문서도 오버뷰에 대응 할 수 있다. `theme-color`를 메타 데이터로 설정하면 오버뷰에 적용된다.
 
 ````
 <meta name="theme-color" content="#3FFFB5">
