@@ -65,3 +65,31 @@ public class MasoJobService extends JobService {
 }
 
 ````
+
+## 배터리 상태
+
+어플리케이션이 수행 후에 배터리의 상황은 계속 변화한다. 안드로이드 롤리팝은 배터리 상황 개괄을 확인할 수 있는 명령을 제공한다.
+
+````
+$ adb shell dumpsys batterystats —charged kr.co.imaso.MasoActivity
+````
+
+조금 더 상세한 배터리 소모를 확인하기 위해 버그리포트를 출력할 수 있다. 버그리포트를 출력하기 위해서는 몇가지 환경 설정이 필요하다.
+
+````
+$ adb shell dumpsys batterystats --enable full-wake-history
+Enabled: full-wake-history
+
+$ adb shell dumpsys batterystats --reset
+Battery stats reset.
+````
+
+분석하고 싶은 앱을 사용한 이후 아래의 커맨드를 입력하여 버그리포트를 추출한다.
+
+````
+$ adb bugreport > bugreport.txt
+````
+
+````
+추출된 버그리포트를 분석하기 위해서는 툴은 구글이 https://github.com/google/battery-historian 에 공개하였으나 현재는 제대로 동작하지 않는 것으로 보인다.
+`````
