@@ -1,6 +1,6 @@
 # 안드로이드 롤리팝 개발 따라잡기
 
-안드로이드 롤리팝(5.0) 버전은 안드로이드가 발표된 이후로 가장 크게 변화를 한 운영체제다. 허니컴 이래 확립했던 디자인 언어 홀로(Holo)을 버리고 구글의 새로운 디자인 언어인 머터리얼 디자인으로 외양을 대대적으로 변경하였고, 내부적으로도 5000개 이상의 API가 추가되고 수 상당한 양의 API를 폐기(deprecated)하였다. 안드로이드 롤리팝의 모든 변화를 글 하나에 다룰 수는 없지만, 롤리팝을 길들이는데 도움이 될 수 있게 개발자에게 큰 영향을 미치는 변화를 한 곳에 모아 소개한다.
+안드로이드 롤리팝(5.0) 버전은 안드로이드가 발표된 이후로 가장 큰 변화를 한 운영체제다. 허니컴 이래 확립했던 디자인 언어 홀로(Holo)를 버리고 구글의 새로운 디자인 언어인 머터리얼 디자인으로 외양을 대대적으로 변경하였고, 내부적으로도 5000개 이상의 API를 추가하고 상당한 양의 API를 폐기(deprecated)하였다. 안드로이드 롤리팝의 모든 변화를 글 하나에 다룰 수는 없지만, 롤리팝을 길들이는데 도움이 될 수 있게 개발자에게 큰 영향을 미치는 변화를 한 곳에 모아 소개한다.
 
 
 ![](http://image.chosun.com/sitedata/image/201410/29/2014102903089_0.jpg)
@@ -11,9 +11,11 @@
 
 <그림 1> 안드로이드 롤리팝 (5.0)
 
+
 ## 배터리 효율
 
 구글은 젤리빈(4.1) 이후 안드로이드 주요 업데이트 마다 프로젝트를 하나씩 진행했다. 젤리빈은 프로젝트 버터(Project Butter)를 통해 쾌적한 사용자 경험을 얻었다. 킷캣(4.4)은 프로젝트 스벨트(Project Svelte)를 통해 512MiB(Mebibyte) 메모리 환경에서도 수행할 수 있는 날렵한 몸을 얻었다. 안드로이드의 최신 버전 롤리팝(5.0)은 프로젝트 볼타(Project Volta)를 통해 조금 더 적은 전력을 쓰게 되었고 어플리케이션의 효율을 높일 여러 방법도 마련했다.
+
 
 ### JobScheduler
 
@@ -47,6 +49,7 @@ mJobService.scheduleJob(job);
 
 더 상세한 `JobInfo` 파라미터를 알고 싶으면 JobInfo.Builder(https://developer.android.com/reference/android/app/job/JobInfo.Builder.html) 를 참고하라.
 
+
 ### JobService 확장하기
 
 `JobService`가 일반적인 작업을 수행하는데 충분하지만 확장을 원할 수 있다. `JobService`는 오버라이딩 가능한 메소드 `onStartJob`와 `onStopJob`를 가지며 이를 수정하여 조금 더 세밀하게 작업을 조율할 수 있다.
@@ -78,6 +81,7 @@ public class MasoJobService extends JobService {
 }
 
 ````
+
 
 ### 배터리 상태
 
@@ -114,6 +118,7 @@ $ adb bugreport > bugreport.txt
 
 <그림 2> 헤즈업 노티피케이션. 우선 순위가 높은 노티피케이션을 작은 창으로 표시한다.
 
+
 ### 락스크린의 프라이버시
 
 락 스크린 상태에서 노티피케이션 가시성은 3단계로 나뉘어 구분된다.
@@ -124,6 +129,7 @@ $ adb bugreport > bugreport.txt
 
 사용자에게 민감한 노티피케이션은 `Notification.builder.setVisibility(VISIBILITY_PRIVATE)`나 `VISIBILITY_SECRET`으로 분류하여 프라이버시를 강화할 수 있다.
 
+
 ### 강화된 메타 데이터
 
 노티피케이션의 메타 데이터도 더 세밀해져 설정할 수 있어 메타 데이터에 맞추어 운영체제가 노티피케이션을 정리해서 보여줄 수 있다.
@@ -133,6 +139,7 @@ $ adb bugreport > bugreport.txt
  * `addPerson()` - 노티피케이션의 대상을 한 사람 이상 설정할 수 있다. 특정 사람에게 노티를 보낼 수도 있고 여러 사람에게 중요한 노티를 보낼 수도 있다.
 
 상세 카테고리와 우선 순위는 Notification(http://developer.android.com/reference/android/app/Notification.html) 을 참고한다.
+
 
 ### 단아한 아이콘
 
@@ -152,6 +159,7 @@ dependencies {
   compile 'com.android.support:appcompat-v7:21.0.3'
 }
 ````
+
 
 ### RemoteControlClient의 폐기
 
@@ -225,6 +233,7 @@ startActivity(intent);
 
 새로운 방식이 적용되었기 때문에 앱에 따라 문제가 발생할 수 있고 AOT에 관련된 이슈는 안드로이드 이슈 리스트(https://code.google.com/p/android/issues/list) 를 자주 참고하면서 해결해야 한다.
 
+
 ### 성급한 GC 최적화
 
 GC의 구조가 변경되었기 때문에 `GC_FOR_ALLOC` 이벤트가 발생하는 빈도를 줄이기 위해 명시적으로 `System.gc()`를 호출할 필요가 없어졌다. 현재 환경이 달빅이 아닌 ART인 것을 환영하기 위해 다음 커맨드를 이용해서 버전 정보를 얻는다.
@@ -234,6 +243,7 @@ System.getProperty("java.vm.version")
 ````
 
 버전 정보가 2.0.0 이상인 경우 명시적인 GC 호출이 필요가 없다.
+
 
 ### JNI 디버깅
 
@@ -259,6 +269,7 @@ I
 E VM aborting
 ````
 
+
 ### Compacting GC
 
 기존 안드로이드에서는 할당된 메모리 블록의 주소 값이 변경되는 경우는 없었다. 메모리 사용의 효율을 높이기 위해 안드로이드 ART는 할당된 메모리 블록을 정리하는 Compacting GC를 도입하고 있다. 이로 인해 할당된 메모리 블록의 주소가 변경될 수 있다. `Get<type>ArrayElements`를 호하여 얻은 경우 올바르게 `Release<type>ArrayElements()`를 호출해야 하며 주소의 값은 변경될 수 있다는 것을 유의해야 한다.
@@ -279,6 +290,7 @@ Object 클래스의 필드 속성이 private으로 변경되었다. Object 필�
 
 기본 퍼미션으로 가능하다면 가능한 커스텀 퍼미션을 쓰지 않는 것이 좋다. 커스텀 퍼미션을 반드시 써야 한다면 패키지 명을 붙여 다른 커스텀 퍼미션과 충돌하지 않도록 관리하며 여러 앱에서 사용해야 한다면 사인키를 잘 관리해야 한다.
 
+
 ## 명시적인 서비스 바인드
 
 서비스 바인드를 할때 명시적인 인텐트만 가능하도록 바뀌었다. 아래와 같이 암묵적인 바인드를 요청할 경우 예외가 발생한다.
@@ -295,6 +307,7 @@ Intent intent = new Intent(this, MicroSoftwareService.class);
 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 ````
 
+
 ## 머터리얼 디자인
 
 ![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7S1dwdXNVa1B1OHc/components_cards6.png)
@@ -306,6 +319,7 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 시각적인 부분은 적용이 가능해졌으나 에니메이션의 경우에는 구형 안드로이드 장비에서 구현이 불가능한 부분이 많다. 롤리팝은 렌더링 스레드가 추가되었는데 렌더링 스레드에 의존적인 에니메이션은 백 포팅이 불가능하기 때문이다.
 
 머터리얼 디자인을 적용할 때 시각적인 부분과 에니메이션 적인 부분을 나누어 에니메이션 부분은 안드로이드 버전 별로 어떻게 대응해야 할지 고민이 필요하다.
+
 
 ### 머터리얼 테마
 
@@ -392,6 +406,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ````
 
+
 ### 네비게이션 드로어 변경하기
 
 ![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7NzhpQzI0R21kOTg/layout_structure_sidenav_structure1.png)
@@ -435,6 +450,7 @@ public void onCreate(Bundle savedInstanceState) {
 ````
 
 `DrawerLayout`을 루트 레이어웃으로 변경하고 `Toolbar`와 어플리케이션 UI를 위한 영역을 내포시키는 형태로 레이아웃을 변경한다.
+
 
 ## 환하게 보이는 고생길 그럼에도 기대하는 새로운 희망
 
