@@ -155,4 +155,285 @@ dependencies {
 
 ### RemoteControlClient의 폐기
 
-`RemoteControlClient`가 폐기됨에 따라 음악 재생 앱 등의 노티피케이션의 변경이 요
+`RemoteControlClient`가 폐기됨에 따라 음악 재생 앱 등의 노티피케이션의 변경이 요구된다. 노티피케이션 스타일 `Notification.MediaStyle`을 이용한다. 
+
+````
+Notification.Builder builder = new Notification.Builder(this)
+    .setSmallIcon(R.drawable.ic_launcher)
+    .setContentTitle("마이크로소프트웨어")
+    .setContentText("안드로이드 롤리팝")
+    .setDeleteIntent(pendingIntent)
+    .setStyle(new Notification.MediaStyle());
+````
+
+`MediaSessionManager` 서비스를 얻어 세션을 등록하고 토큰을 설정한다. 
+
+````
+mManager = (MediaSessionManager) getSystemService(Context.MEDIA_SESSION_SERVICE);
+mSession = mManager.createSession("microsoftware session");
+mController = MediaController.fromToken(mSession.getSessionToken());
+````
+
+세션의 `TransportControlsCallback`을 등록하고, 각 상황에 따라 다른 노티피케이션을 생성하도록 `onPlay`, `onPause` 등의 메서드를 오버라이드한다.
+
+````
+mSession.addTransportControlsCallback(new MediaSession.TransportControlsCallback() {
+    @Override
+    public void onPlay() {}
+
+    @Override
+    public void onPause() {}
+    ...
+}
+````
+
+노티피케이션의 액션을 다른 서비스로 연결시키고 해당 서비스에서 `mController.getTransportControls().play()` 등을 호출 한다.
+
+
+## 오버뷰
+
+![](http://developer.android.com/images/versions/recents_screen_2x.png)
+
+<그림 3> 오버뷰(overview), 최근 문서(작업, 탭)을 3D 박스로 표현한다.
+
+최근 화면(recents screen)이 오버뷰(overview)로 변경되었다. 최근 작업들은 3D로 개성있게 렌더링되며 여러 문서와 탭을 쉽게 이동할 수 있도록 `AppTask`를 모두 표출한다. 웹 브라우저의 탭들을 오버뷰를 통해 이동할 수 있고 구글 독스의 여러 문서를 오버뷰 스크린에서 이동할 수 있는 것이다.
+
+새로운 도큐먼트를 생성하기 위해서는 `android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT` 플래그를 포함하여 액티비티를 호출한다.
+
+````
+Intent intent = new Intent(this, MicroSoftware.class);
+intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+startActivity(intent);
+````
+
+웹 사이트 문서도 오버뷰에 대응 할 수 있다. `theme-color`를 메타 데이터로 설정하면 오버뷰에 적용된다.
+
+````
+<meta name="theme-color" content="#3FFFB5">
+````
+
+
+## 런타임 엔진 ART
+
+![](http://upload.wikimedia.org/wikipedia/commons/2/25/ART_view.png)
+
+<그림 4> 달빅과 ART의 차이를 표현. 달빅은 DEX 파일에서 최적화된 Odex를 얻고 ART는 실행파일 ELF를 얻는다.
+
+초기 안드로이드에 탑재된 가상 머신 달빅(Dalvik)은 모바일 환경을 고려해서 적은 메모리, 최적화된 리소스 관리, 최소화 오버헤드 등이 목표였다. 자주 수행되는 구간(트레이스, trace)을 기계어 코드로 바꾸는 JIT (Just-in-time) 컴파일러는 안드로이드 프로요(2.2) 버전에서야 도입되었다. 달빅의 기본 전략은 달빅 바이트코드(Dalvik bytecode)로 된 코드를 한줄 씩 해석하는 것이며, 반복 수행되는 구간(트레이스, trace)를 기계어 코드로 변환하여 효율을 높이는 구조이다. 트레이스라 불리는 특정 구간을 번역하는 작업은 메소드 단위로 기계어로 변환하는 것보다 시간은 짧게 걸리고 변환된 기계어 코드의 용량이 적기 때문에 메모리가 적고 CPU 파워가 낮은 상황에 적합해던 방식이다. 반면에 모바일을 위한 경량 가상 머신에서 시작한 달빅은 구조적인 한계는 있다.
+
+구글은 안드로이드 킷캣 버전 부터 ART(Android Runtime)를 준비했고 롤리팝 버전 부터는 강제 사항이 되었다. ART는 AOT(ahead-of-time) 방식의 런타임 환경이다. ART의 내장된 dex2oat 유틸리티는 달빅에서 쓰이던 달빅 바이트코드와 리소스 파일이 통합된 .dex 파일을 리눅스에서 널리 쓰이는 실행파일인 형태인 ELF (Executable and Linkable Format)로 변환한다. dex2oat는 앱의 초기 수행시 호출되며 ART의 AOT는 앱의 최초 수행 과정에 dex2oat 유틸리티를 이용하여 실행 파일을 얻어내는 기술인 셈이다. 이로 인해 롤리팝은 수행 성능, 가비지 컬렉션(GC, Garbage collection)의 성능, 프로파일링, 디버깅 등에서 이점을 얻었다.
+
+새로운 방식이 적용되었기 때문에 앱에 따라 문제가 발생할 수 있고 AOT에 관련된 이슈는 안드로이드 이슈 리스트(https://code.google.com/p/android/issues/list) 를 자주 참고하면서 해결해야 한다.
+
+### 성급한 GC 최적화
+
+GC의 구조가 변경되었기 때문에 `GC_FOR_ALLOC` 이벤트가 발생하는 빈도를 줄이기 위해 명시적으로 `System.gc()`를 호출할 필요가 없어졌다. 현재 환경이 달빅이 아닌 ART인 것을 환영하기 위해 다음 커맨드를 이용해서 버전 정보를 얻는다.
+
+````
+System.getProperty("java.vm.version")
+````
+
+버전 정보가 2.0.0 이상인 경우 명시적인 GC 호출이 필요가 없다.
+
+### JNI 디버깅
+
+ART의 채택에 따라 기존에 잘 동작하던 JNI 앱의 동작에 문제가 생길 수 있다. JNI의 동작에 문제가 있는 경우 안드로이드에 포함된 CheckJNI 툴이 도움이 된다.
+
+````
+$ adb shell setprop debug.checkjni 1
+````
+
+환경이 설정되면 JNI 코드 수행에서 경고나 에러 메시지를 볼 수 있다.
+
+````
+W JNI WARNING: method declared to return 'Ljava/lang/String;' returned '[B'
+W              failed in LJniTest;.exampleJniBug
+I "main" prio=5 tid=1 RUNNABLE
+I   | group="main" sCount=0 dsCount=0 obj=0x40246f60 self=0x10538
+I   | sysTid=15295 nice=0 sched=0/0 cgrp=default handle=-2145061784
+I   | schedstat=( 398335000 1493000 253 ) utm=25 stm=14 core=0
+I   at JniTest.exampleJniBug(Native Method)
+I   at JniTest.main(JniTest.java:11)
+I   at dalvik.system.NativeStart.main(Native Method)
+I 
+E VM aborting
+````
+
+### Compacting GC
+
+기존 안드로이드에서는 할당된 메모리 블록의 주소 값이 변경되는 경우는 없었다. 메모리 사용의 효율을 높이기 위해 안드로이드 ART는 할당된 메모리 블록을 정리하는 Compacting GC를 도입하고 있다. 이로 인해 할당된 메모리 블록의 주소가 변경될 수 있다. `Get<type>ArrayElements`를 호촐하여 얻은 경우 올바르게 `Release<type>ArrayElements()`를 호출해야 하며 주소의 값은 변경될 수 있다는 것을 유의해야 한다.
+
+### Object 모델 변경
+
+Object 클래스의 필드 속성이 private으로 변경되었다. Object 필드를 Reflection으로 접근하는 경우에 문제가 될 수 있다. 
+
+
+## 중복된 커스터 퍼미션 선언 문제
+
+````
+<permission android:name= "com.example.gcm.permission.C2D_MESSAGE"
+  android:protectionLevel="signature" />
+````
+
+안드로이드 5.0부터 커스텀 퍼미션은 동일한 사인키를 가진 앱에서만 사용할 수 있도록 변경되었다. 같은 퍼미션을 사용하고 있는 앱이 다른 사인키를 가지고 있다면 아래의 `INSTALL_FAILED_DUPLICATE_PERMISSION` 메시지와 함께 설치가 거부된다. 이 변경 사항은 앱의 `targetSDK` 버전과는 무관하며 롤리팝 디바이스에서는 강제로 적용되는 사항이다.
+
+기본 퍼미션으로 가능하다면 가능한 커스텀 퍼미션을 쓰지 않는 것이 좋다. 커스텀 퍼미션을 반드시 써야 한다면 패키지 명을 붙여 다른 커스텀 퍼미션과 충돌하지 않도록 관리하며 여러 앱에서 사용해야 한다면 사인키를 잘 관리해야 한다.
+
+## 명시적인 서비스 바인드
+
+서비스 바인드를 할때 명시적인 인텐트만 가능하도록 바뀌었다. 아래와 같이 암묵적인 바인드를 요청할 경우 예외가 발생한다.
+
+````
+Intent intent = new Intent(MICROSOFTWARE_BINDING);
+bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+````
+
+제대로 된 바인드는 아래와 같다.
+
+````
+Intent intent = new Intent(this, MicroSoftwareService.class);
+bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+````
+
+## 머터리얼 디자인
+
+![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7S1dwdXNVa1B1OHc/components_cards6.png)
+
+<그림 5> 머터리얼 디자인
+
+구글의 통합 디자인 언어 머터러일 디자인이 안드로이드에 통합되었다. 잉크와 종이를 컨셉으로 한 다양한 UX 컨셉이 도입되었고 그에 따라 변화된 부분도 많이 존재한다. `appcompat` 라이브러리를 통해 기존 라이브러리에서 기존 안드로이드 버전에서도 머터리얼 디자인을 부분적으로 적용할 수 있게 되었다.
+
+시각적인 부분은 적용이 가능해졌으나 에니메이션의 경우에는 구형 안드로이드 장비에서 구현이 불가능한 부분이 많다. 롤리팝은 렌더링 스레드가 추가되었는데 렌더링 스레드에 의존적인 에니메이션은 백 포팅이 불가능하기 때문이다.
+
+머터리얼 디자인을 적용할 때 시각적인 부분과 에니메이션 적인 부분을 나누어 에니메이션 부분은 안드로이드 버전 별로 어떻게 대응해야 할지 고민이 필요하다.
+
+### 머터리얼 테마
+
+`Theme.AppCompat`를 확장한 경우 `colorPrimary`, `colorPrimaryDark`, `colorAccent` 등의 색상을 설정해야 한다. `Theme.AppCompat`를 위한 색상의 설정에서는 `android:` 접두어가 붙지 않는다.
+
+````
+<style name="Theme.MyTheme" parent="Theme.AppCompat.Light">
+    <item name="colorPrimary">@color/material_blue_500</item>
+    <item name="colorPrimaryDark">@color/material_blue_700</item>
+    <item name="colorAccent">@color/material_green_A200</item>
+</style>
+````
+
+### 액션바의 폐기
+
+![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7UnNtdkNxY05oelk/layout_structure_toolbars2.png)
+
+<그림 6> 툴바. 액션바를 대체하는 유연한 앱 바 콤퍼넌트.
+
+안드로이드 허니콤 버전(3.0)부터 적용되었던 액션 바가 폐기되었다. 액션바는 구글이 허니콤 이후로 정착시키려는 가이드라인의 핵심이었고 가이드라인을 강제하기 위해 커스터마이징이 어렵게 되어있었다. 액션바가 폐기되고 툴바가 들어온 것은 머터리얼 디자인에서는 조금 더 다양한 시도를 할 수 있도록 문을 열어줬다고 볼 수 있다.
+
+툴바를 사용하기 위해서 먼저 `appcompat` 라이브러리가 표함되어야 한다.
+
+````
+dependencies {
+    compile "com.android.support:appcompat-v7:21.0.3"
+}
+````
+
+툴바를 사용하기 위해서는 먼저 액티비티는 `ActionBarActivity`를 상속받고 테마는 `Theme.AppCompat`를 상속받아야 한다.
+
+`ActionBarActivity`의 레이아웃에 `Toolbar`를 추가한다.
+
+````
+<android.support.v7.widget.Toolbar
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:background="?attr/colorPrimary" />
+````
+
+레이아웃에 `Toolbar`를 추가한 후 액티비티에 연결하는 방법은 두가지가 있다.
+
+ 1. 액션바 처럼 연결하기.
+ 2. 그냥 연결하기.
+
+액션바 처럼 연결하는 것은 `setSupportActionBar` 메서드를 이용하는 것이다.
+
+````
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.microsoftware_layout);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+}
+````
+
+또 다른 방법은 툴바의 `setOnMenuItemClickListener`와 `inflateMenu`를 이용하는 방법이다.
+
+````
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.microsoftware_layout);
+
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+    // Set an OnMenuItemClickListener to handle menu item clicks
+    toolbar.setOnMenuItemClickListener(
+            new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    // Handle the menu item
+                    return true;
+                }
+    });
+
+    // Inflate a menu to be displayed in the toolbar
+    toolbar.inflateMenu(R.menu.microsoftware_menu);
+}
+````
+
+### 네비게이션 드로어 변경하기
+
+![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7NzhpQzI0R21kOTg/layout_structure_sidenav_structure1.png)
+
+<그림 7> 머터리얼 디자인 네비게이션 드로어
+
+롤리팝에서는 네비게이션 드로어가 화면 전체를 가리는 형태로 변경되었다. 이렇게 드로어가 화면 전체를 가리기 위해서는 `DrawLayout` 구성의 변경이 필요하다.
+
+````
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+ 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+ 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize" />
+ 
+        <!-- 어플리케이션 UI -->
+ 
+    </LinearLayout>
+ 
+    <View
+        android:id="@+id/drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#3F51B5"
+        android:fitsSystemWindows="true" />
+ 
+ 
+</android.support.v4.widget.DrawerLayout>
+````
+
+`DrawerLayout`을 루트 레이어웃으로 변경하고 `Toolbar`와 어플리케이션 UI를 위한 영역을 내포시키는 형태로 레이아웃을 변경한다.
+
+
