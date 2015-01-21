@@ -284,7 +284,11 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 ![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7S1dwdXNVa1B1OHc/components_cards6.png)
 
-구글의 통합 디자인 언어 머터러일 디자인이 안드로이드에 통합되었다. 잉크와 종이를 컨셉으로 한 다양한 UX 컨셉이 도입되었고 그에 따라 변화된 부분도 많이 존재한다. `appcompat` 라이브러리를 통해 기존 라이브러리에서 기존 안드로이드 버전에서도 머터리얼 디자인을 부분적으로 적용할 수 있게 되었다. 시각적인 부분은 적용이 가능해졌으나 에니메이션 등의 특징들은 구형 안드로이드 장비에서 구현이 불가능한 부분들이 있다. 롤리팝은 렌더링 스레드가 추가되었는데 렌더링 스레드가 의존적인 에니메이션은 백포팅이 불가능하기 때문이다. 머터리얼 디자인을 적용할 때 시각적인 부분과 에니메이션 적인 부분을 나누어 에니메이션 부분은 안드로이드 버전 별로 어떻게 대응해야 할지 고민이 필요하다.
+구글의 통합 디자인 언어 머터러일 디자인이 안드로이드에 통합되었다. 잉크와 종이를 컨셉으로 한 다양한 UX 컨셉이 도입되었고 그에 따라 변화된 부분도 많이 존재한다. `appcompat` 라이브러리를 통해 기존 라이브러리에서 기존 안드로이드 버전에서도 머터리얼 디자인을 부분적으로 적용할 수 있게 되었다.
+
+시각적인 부분은 적용이 가능해졌으나 에니메이션의 경우에는 구형 안드로이드 장비에서 구현이 불가능한 부분이 많다. 롤리팝은 렌더링 스레드가 추가되었는데 렌더링 스레드에 의존적인 에니메이션은 백 포팅이 불가능하기 때문이다.
+
+머터리얼 디자인을 적용할 때 시각적인 부분과 에니메이션 적인 부분을 나누어 에니메이션 부분은 안드로이드 버전 별로 어떻게 대응해야 할지 고민이 필요하다.
 
 ### 머터리얼 테마
 
@@ -299,6 +303,8 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 ````
 
 ### 액션바의 폐기
+
+![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7UnNtdkNxY05oelk/layout_structure_toolbars2.png)
 
 안드로이드 허니콤 버전(3.0)부터 적용되었던 액션 바가 폐기되었다. 액션바는 구글이 허니콤 이후로 정착시키려는 가이드라인의 핵심이었고 가이드라인을 강제하기 위해 커스터마이징이 어렵게 되어있었다. 액션바가 폐기되고 툴바가 들어온 것은 머터리얼 디자인에서는 조금 더 다양한 시도를 할 수 있도록 문을 열어줬다고 볼 수 있다.
 
@@ -367,5 +373,44 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ````
 
-### 
+### 네비게이션 드로어 변경하기
 
+![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7NzhpQzI0R21kOTg/layout_structure_sidenav_structure1.png)
+
+롤리팝에서는 네비게이션 드로어가 화면 전체를 가리는 형태로 변경되었다. 이렇게 드로어가 화면 전체를 가리기 위해서는 `DrawLayout` 구성의 변경이 필요하다.
+
+````
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+ 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+ 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize" />
+ 
+        <!-- 어플리케이션 UI -->
+ 
+    </LinearLayout>
+ 
+    <View
+        android:id="@+id/drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#3F51B5"
+        android:fitsSystemWindows="true" />
+ 
+ 
+</android.support.v4.widget.DrawerLayout>
+````
+
+`DrawerLayout`을 루트 레이어웃으로 변경하고 `Toolbar`와 어플리케이션 UI를 위한 영역을 내포시키는 형태로 레이아웃을 변경한다.
