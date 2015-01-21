@@ -45,7 +45,7 @@ JobService mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCH
 mJobService.scheduleJob(job);
 ````
 
-더 상세한 `JobInfo` 파라미터를 하려면 JobInfo.Builder(https://developer.android.com/reference/android/app/job/JobInfo.Builder.html) 를 참고하라.
+더 상세한 `JobInfo` 파라미터를 알고 싶으면 JobInfo.Builder(https://developer.android.com/reference/android/app/job/JobInfo.Builder.html) 를 참고하라.
 
 ### JobService 확장하기
 
@@ -446,4 +446,4 @@ public void onCreate(Bundle savedInstanceState) {
 
  * GDG 코리아 안드로이드 - https://plus.google.com/communities/100903743067544956282
  * 구글 개발자 코리아 블로그 - http://googledevkr.blogspot.kr/
- * 페이스북 커뮤니티 안드로이드 팁팁팁 - https://www.facebook.com/groups/junsle
+ * 페이스북 커뮤니티 안로이드 팁팁팁 - https://www.facebook.com/groups/junsle
