@@ -9,7 +9,7 @@
 
 ![](http://developer.android.com/images/home/l-hero_2x.png)
 
-<그림 1> 
+<그림 1> 안드로이드 롤리팝 (5.0)
 
 ## 배터리 효율
 
@@ -112,6 +112,8 @@ $ adb bugreport > bugreport.txt
 
 ![](http://developer.android.com/images/versions/notification-headsup.png)
 
+<그림 2> 헤즈업 노티피케이션. 우선 순위가 높은 노티피케이션을 작은 창으로 표시한다.
+
 ### 락스크린의 프라이버시
 
 락 스크린 상태에서 노티피케이션 가시성은 3단계로 나뉘어 구분된다.
@@ -192,6 +194,8 @@ mSession.addTransportControlsCallback(new MediaSession.TransportControlsCallback
 
 ![](http://developer.android.com/images/versions/recents_screen_2x.png)
 
+<그림 3> 오버뷰(overview), 최근 문서(작업, 탭)을 3D 박스로 표현한다.
+
 최근 화면(recents screen)이 오버뷰(overview)로 변경되었다. 최근 작업들은 3D로 개성있게 렌더링되며 여러 문서와 탭을 쉽게 이동할 수 있도록 `AppTask`를 모두 표출한다. 웹 브라우저의 탭들을 오버뷰를 통해 이동할 수 있고 구글 독스의 여러 문서를 오버뷰 스크린에서 이동할 수 있는 것이다.
 
 새로운 도큐먼트를 생성하기 위해서는 `android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT` 플래그를 포함하여 액티비티를 호출한다.
@@ -212,6 +216,8 @@ startActivity(intent);
 ## 런타임 엔진 ART
 
 ![](http://upload.wikimedia.org/wikipedia/commons/2/25/ART_view.png)
+
+<그림 4> 달빅과 ART의 차이를 표현. 달빅은 DEX 파일에서 최적화된 Odex를 얻고 ART는 실행파일 ELF를 얻는다.
 
 초기 안드로이드에 탑재된 가상 머신 달빅(Dalvik)은 모바일 환경을 고려해서 적은 메모리, 최적화된 리소스 관리, 최소화 오버헤드 등이 목표였다. 자주 수행되는 구간(트레이스, trace)을 기계어 코드로 바꾸는 JIT (Just-in-time) 컴파일러는 안드로이드 프로요(2.2) 버전에서야 도입되었다. 달빅의 기본 전략은 달빅 바이트코드(Dalvik bytecode)로 된 코드를 한줄 씩 해석하는 것이며, 반복 수행되는 구간(트레이스, trace)를 기계어 코드로 변환하여 효율을 높이는 구조이다. 트레이스라 불리는 특정 구간을 번역하는 작업은 메소드 단위로 기계어로 변환하는 것보다 시간은 짧게 걸리고 변환된 기계어 코드의 용량이 적기 때문에 메모리가 적고 CPU 파워가 낮은 상황에 적합해던 방식이다. 반면에 모바일을 위한 경량 가상 머신에서 시작한 달빅은 구조적인 한계는 있다.
 
@@ -293,6 +299,8 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 ![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7S1dwdXNVa1B1OHc/components_cards6.png)
 
+<그림 5> 머터리얼 디자인
+
 구글의 통합 디자인 언어 머터러일 디자인이 안드로이드에 통합되었다. 잉크와 종이를 컨셉으로 한 다양한 UX 컨셉이 도입되었고 그에 따라 변화된 부분도 많이 존재한다. `appcompat` 라이브러리를 통해 기존 라이브러리에서 기존 안드로이드 버전에서도 머터리얼 디자인을 부분적으로 적용할 수 있게 되었다.
 
 시각적인 부분은 적용이 가능해졌으나 에니메이션의 경우에는 구형 안드로이드 장비에서 구현이 불가능한 부분이 많다. 롤리팝은 렌더링 스레드가 추가되었는데 렌더링 스레드에 의존적인 에니메이션은 백 포팅이 불가능하기 때문이다.
@@ -314,6 +322,8 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 ### 액션바의 폐기
 
 ![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7UnNtdkNxY05oelk/layout_structure_toolbars2.png)
+
+<그림 6> 툴바. 액션바를 대체하는 유연한 앱 바 콤퍼넌트.
 
 안드로이드 허니콤 버전(3.0)부터 적용되었던 액션 바가 폐기되었다. 액션바는 구글이 허니콤 이후로 정착시키려는 가이드라인의 핵심이었고 가이드라인을 강제하기 위해 커스터마이징이 어렵게 되어있었다. 액션바가 폐기되고 툴바가 들어온 것은 머터리얼 디자인에서는 조금 더 다양한 시도를 할 수 있도록 문을 열어줬다고 볼 수 있다.
 
@@ -385,6 +395,8 @@ public void onCreate(Bundle savedInstanceState) {
 ### 네비게이션 드로어 변경하기
 
 ![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7NzhpQzI0R21kOTg/layout_structure_sidenav_structure1.png)
+
+<그림 7> 머터리얼 디자인 네비게이션 드로어
 
 롤리팝에서는 네비게이션 드로어가 화면 전체를 가리는 형태로 변경되었다. 이렇게 드로어가 화면 전체를 가리기 위해서는 `DrawLayout` 구성의 변경이 필요하다.
 
