@@ -1,5 +1,11 @@
 # 안드로이드 롤리팝 개발 따라잡기
 
+안드로이드 롤리팝(5.0) 버전은 안드로이드가 발표된 이후로 가장 크게 변화를 한 버전이다. 허니컴 이래 확립되었던 디자인 언어 홀로(Holo)을 버리고 새로운 구글의 디자인 언어인 머터리얼 디자인으로 대대적으로 변경하였고 내부적으로도 5000개 이상의 API가 추가되고 수 많은 API를 폐기(deprecated)하였다. 안드로이드 롤리팝의 모든 변화를 글 하나에 다룰 수는 없지만, 롤리팝을 길들이는데 도움이 될 수 있게 개발자에게 큰 영향을 미치는 변화를 한 곳에 모아 소개한다.
+
+
+![](http://image.chosun.com/sitedata/image/201410/29/2014102903089_0.jpg)
+김용욱 dalinaum@gmail.com | GDG Korea Android 오거나이저. 영화를 광적으로 좋아하는 안드로이드 개발자로 최근에는 Reactive Programming에 빠져 RxJava, RxAndroid에 매진하고 있다. 
+
 ![](http://developer.android.com/images/home/l-hero_2x.png)
 
 ## 배터리 효율
@@ -414,3 +420,6 @@ public void onCreate(Bundle savedInstanceState) {
 ````
 
 `DrawerLayout`을 루트 레이어웃으로 변경하고 `Toolbar`와 어플리케이션 UI를 위한 영역을 내포시키는 형태로 레이아웃을 변경한다.
+
+
+
