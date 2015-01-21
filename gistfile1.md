@@ -4,9 +4,12 @@
 
 
 ![](http://image.chosun.com/sitedata/image/201410/29/2014102903089_0.jpg)
+
 김용욱 dalinaum@gmail.com | GDG Korea Android 오거나이저. 영화를 광적으로 좋아하는 안드로이드 개발자로 최근에는 Reactive Programming에 빠져 RxJava, RxAndroid에 매진하고 있다. 
 
 ![](http://developer.android.com/images/home/l-hero_2x.png)
+
+<그림 1> 
 
 ## 배터리 효율
 
