@@ -526,7 +526,7 @@ public void onCreate(Bundle savedInstanceState) {
 </android.support.v4.widget.DrawerLayout>
 ````
 
-<리스트 25> 머터리얼 디자인에 맞추어 변경돈 드로어 레이아웃.
+<리스트 25> 머터리얼 디자인에 맞추어 변경된 드로어 레이아웃.
 
 
 `DrawerLayout`을 루트 레이아웃으로 변경하고 `Toolbar`와 어플리케이션 UI를 속에 내포하는 형태로 레이아웃을 변경한다.
