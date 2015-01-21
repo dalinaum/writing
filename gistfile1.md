@@ -19,7 +19,7 @@
 
 ### JobScheduler
 
-상황에 대한 고려가 없는 비동기 작업은 배터리 사용에 부정적이다. 네트워크가 안정적이지 않은 상황 속에 사용자가 촬영해 둔 사진을 서버로 백업하면 휴대의 배터리가 금방 바닥이 날 수 있다. 그 때문에 네트워크가 안정적일 때나 충전 중에 사진을 업로드하는 것이 훨씬 효율적이다. 롤리팝은 JobScheduler API를 도입해 배터리와 네트워크 상황에 따라 적절한 작업 계획을 잡을 수 있도록 한다.
+상황에 대한 고려가 없는 비동기 작업은 배터리 사용에 부정적이다. 네트워크가 안정적이지 않은 상황 속에 사용자가 촬영해 둔 사진을 서버로 백업하면 휴대폰의 배터리가 금방 바닥이 날 수 있다. 그 때문에 네트워크가 안정적일 때나 충전 중에 사진을 업로드하는 것이 훨씬 효율적이다. 롤리팝은 JobScheduler API를 도입해 배터리와 네트워크 상황에 따라 적절한 작업 계획을 잡을 수 있도록 한다.
 
 JobScheduler API는 사용자 수준의 클래스와 안드로이드 서비스로 구성돼 있다. 롤리팝 장비가 연결된 PC에서 <리스트 1>의 커맨드를 입력하면 JobScheduler의 안드로이드 서비스를 확인할 수 있다.
 
@@ -28,7 +28,7 @@ $ adb shell service list | grep jobscheduler
 25  jobscheduler: [android.app.job.IJobScheduler]
 ````
 
-<리스트 1> 안드로이드 서비스 리스트에서 jobscheduler 추가를 확인
+<리스트 1> 안드로이드 서비스 리스트에서 `jobscheduler` 추가를 확인
 
 
 JobScheduler API는 `JobInfo`와 `JobService` 2개 객체로 구성돼 있다. 
@@ -69,7 +69,7 @@ mJobService.scheduleJob(job);
  android:exported="true" />
 ````
 
-<리스트 3> AndroidManifest.xml 등록
+<리스트 3> `AndroidManifest.xml` 등록
 
 
 <리스트 4>의 `onStartJob`은 작업이 시작될 때 호출되며 별도로 수행할 작업이 등록되는 곳이다. `onStopJob`은 작업이 끝날 때 호출되는 곳이다. 반환 값 true는 오버라이딩이 됐고 커스터마이징된 작업이 수행됐음을 의미한다. `onStartJob`이 리턴되기 전에 추가적으로 해야할 일을 수행하자. 
@@ -91,8 +91,7 @@ public class MasoJobService extends JobService {
 
 ````
 
-<리스트 4> 확장된 JobService, MasoJobService.
-
+<리스트 4> 확장된 `JobService`, `MasoJobService`.
 
 
 ### 배터리 상태
@@ -103,7 +102,7 @@ public class MasoJobService extends JobService {
 $ adb shell dumpsys batterystats —charged kr.co.imaso.MasoActivity
 ````
 
-<리스트 5> kr.co.imaso.MasoActivity 패키지 배터리 상황 확인
+<리스트 5> `kr.co.imaso.MasoActivity` 패키지 배터리 상황 확인
 
 
 조금 더 상세한 배터리 소모를 확인하기 위해 버그리포트를 출력할 수도 있다. 버그리포트를 출력하기 위해서는 <리스트 6>과 같은 몇 가지 설정 절차가 필요하다.
@@ -184,7 +183,7 @@ dependencies {
 }
 ````
 
-<리스트 9> appcompat 라이브러리 의존성 등록
+<리스트 9> `appcompat` 라이브러리 의존성 등록
 
 
 ### RemoteControlClient의 폐기
@@ -200,7 +199,7 @@ Notification.Builder builder = new Notification.Builder(this)
     .setStyle(new Notification.MediaStyle());
 ````
 
-<리스트 10> MediaStyle 형식의 노티피케이션
+<리스트 10> `MediaStyle` 형식의 노티피케이션
 
 
 <리스트 11>과 같이 `MediaSessionManager` 서비스를 얻은 후 세션을 만들고, 그 세션으로부터 토큰을 받아와 미디어 컨트롤에 설정한다.
@@ -211,7 +210,7 @@ mSession = mManager.createSession("microsoftware session");
 mController = MediaController.fromToken(mSession.getSessionToken());
 ````
 
-<리스트 11> MediaController 환경 설정.
+<리스트 11> `MediaController` 환경 설정.
 
 
 세션의 `TransportControlsCallback`을 등록하고, 각 상황에 따라 다른 노티피케이션을 생성하도록 `onPlay`, `onPause` 등의 메소드를 오버라이드한다. <리스트 12>는 콜백을 등록하는 과정과 스켈레톤을 대략적으로 보이고 있으며, 오버라이딩할 메소드 마다 개별적으로 노티피케이션을 설정하고 띄워야 한다. 예를 들어 `onPlay` 메소드는 재생과 관련된 노티피케이션을 띄워야 한다.
@@ -227,7 +226,7 @@ mSession.addTransportControlsCallback(new MediaSession.TransportControlsCallback
 }
 ````
 
-<리스트 12> TransportControlsCallback의 개괄과 등록 과정
+<리스트 12> `TransportControlsCallback`의 개괄과 등록 과정
 
 
 노티피케이션의 액션을 다른 서비스로 연결시키고 해당 서비스에서 `mController.getTransportControls().play()` 등을 호출 한다.
@@ -250,7 +249,7 @@ intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 startActivity(intent);
 ````
 
-<리스트 13> 도큐먼트를 오버뷰에 추가하기 위해 FLAG_ACTIVITY_NEW_DOCUMENT 플래그를 사용
+<리스트 13> 도큐먼트를 오버뷰에 추가하기 위해 `FLAG_ACTIVITY_NEW_DOCUMENT` 플래그를 사용
 
 
 웹사이트 문서도 오버뷰에 대응 할 수 있다. 웹 문서에 <리스트 14>와 같이 메타 데이터 `theme-color`를 설정하면 오버뷰 문서 속성으로 테마 색이 등록된다.
@@ -330,7 +329,7 @@ E VM aborting
 
 ### Object 모델 변경
 
-Object 클래스의 필드 속성이 private으로 변경되었다. Object 필드를 Reflection으로 접근하는 경우에 문제가 될 수 있다. 
+`Object` 클래스의 필드 속성이 `private`으로 변경되었다. `Object` 필드를 `Reflection`으로 접근하는 경우에 문제가 될 수 있다. 
 
 
 ## 중복된 커스텀 퍼미션 선언 문제
@@ -406,7 +405,7 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 <그림 6> 툴바. 액션바를 대체하는 유연한 앱 바 콤퍼넌트.
 
-안드로이드 허니콤 버전(3.0)부터 적용되었던 액션 바가 폐기되었다. 액션바는 구글이 허니콤 이후로 정착시키려는 가이드라인의 핵심이었고 가이드라인을 강제하기 위해 커스터마이징이 어렵게 되어있었다. 액션바가 폐기되고 툴바가 들어온 것은 머터리얼 디자인에서는 조금 더 다양한 시도를 할 수 있도록 문을 열어줬다고 볼 수 있다.
+안드로이드 허니콤 버전(3.0)부터 적용되었던 액션바가 폐기되었다. 액션바는 구글이 허니콤 이후로 정착시키려는 가이드라인의 핵심이었고 가이드라인을 강제하기 위해 커스터마이징이 어렵게 되어있었다. 액션바가 폐기되고 툴바가 들어온 것은 머터리얼 디자인에서는 조금 더 다양한 시도를 할 수 있도록 문을 열어줬다고 볼 수 있다.
 
 툴바를 사용하기 위해서 먼저 `appcompat` 라이브러리가 표함되어야 한다.
 
@@ -454,7 +453,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ````
 
-<리스트 23> setSupportActionBar를 이용한 툴바의 사용.
+<리스트 23> `setSupportActionBar`를 이용한 툴바의 사용.
 
 
 툴바를 활용하는 또 다른 방법은 툴바의 `setOnMenuItemClickListener`와 `inflateMenu`를 이용하는 것이다.
