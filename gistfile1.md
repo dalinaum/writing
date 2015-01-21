@@ -28,7 +28,7 @@ $ adb shell service list | grep jobscheduler
 25  jobscheduler: [android.app.job.IJobScheduler]
 ````
 
-<리스트 1>
+<리스트 1> 안드로이드 서비스 리스트에서 jobscheduler 추가를 확인.
 
 
 JobScheduler API는 두개의 객체 `JobInfo`와 `JobService`로 구성되어 있다. 
@@ -50,7 +50,7 @@ JobService mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCH
 mJobService.scheduleJob(job);
 ````
 
-<리스트 2>
+<리스트 2> JobScheduler API 사용.
 
 
 더 상세한 `JobInfo` 파라미터를 알고 싶으면 JobInfo.Builder (https://developer.android.com/reference/android/app/job/JobInfo.Builder.html) 를 참고하라.
@@ -69,7 +69,7 @@ mJobService.scheduleJob(job);
  android:exported="true" />
 ````
 
-<리스트 3>
+<리스트 3 JobService 확장의 AndroidManifest.xml 등록.
 
 
 <리스트 4>의 `onStartJob`은 작업이 시작될 때 호출되며 별도로 수행할 작업이 등록되어야 하는 곳이고 `onStopJob`은 작업이 끝날 때 호출되는 곳이다. 반환 값 true는 오버라이딩이 되었고 커스터마이징 된 작업이 수행 되었다는 것을 의미한다. `onStartJob`이 리턴되기 전에 추가적으로 해야할 일을 수행하자. 
@@ -91,7 +91,7 @@ public class MasoJobService extends JobService {
 
 ````
 
-<리스트 4>
+<리스트 4> 확장된 JobService, MasoJobService.
 
 
 
@@ -103,7 +103,7 @@ public class MasoJobService extends JobService {
 $ adb shell dumpsys batterystats —charged kr.co.imaso.MasoActivity
 ````
 
-<리스트 5>
+<리스트 5> kr.co.imaso.MasoActivity 패키지 배터리 상황 확인.
 
 
 조금 더 상세한 배터리 소모를 확인하기 위해 버그리포트를 출력할 수 있다. 버그리포트를 출력하기 위해서는 <리스트 6>에서 보이는 몇가지 설정 절차가 필요하다.
@@ -116,7 +116,7 @@ $ adb shell dumpsys batterystats --reset
 Battery stats reset.
 ````
 
-<리스트 6>
+<리스트 6> 전체 웨이크 히스토리를 기록하도록 환경 설정.
 
 
 분석하고 싶은 앱을 사용한 이후 <리스트 7>의 커맨드를 입력하여 버그리포트를 추출한다.
@@ -125,7 +125,7 @@ Battery stats reset.
 $ adb bugreport > bugreport.txt
 ````
 
-<리스트 7>
+<리스트 7> 버그리포트를 통해 웨이크 히스토리를 추출.
 
 
 참고: 추출된 버그리포트의 분석을 돕는 툴 Battery Historian (https://github.com/google/battery-historian) 을 구글이 공개하였으나 현재 제대로 동작하지 않고 있다. 이후 리포지토리의 업데이트를 확인하여 적용하도록 한다.
@@ -173,7 +173,7 @@ builder.setColor(color);
 Notification notif = builder.build();
 ````
 
-<리스트 8>
+<리스트 8> 배경 색상이 등록된 노티피케이션.
 
 
 `NotificationCompat`은 구 버전 단말에서도 사용할 수 있도록 호환성 라이브러리에 추가된 노티피케이션 객체이다. 호환성 라이브러리를 사용하려면 `build.gralde`파일에 <리스트 9>에 기술된 의존성을 추가한다.
@@ -184,7 +184,7 @@ dependencies {
 }
 ````
 
-<리스트 9>
+<리스트 9> appcompat 라이브러리를 의존성 등록.
 
 
 ### RemoteControlClient의 폐기
@@ -200,7 +200,7 @@ Notification.Builder builder = new Notification.Builder(this)
     .setStyle(new Notification.MediaStyle());
 ````
 
-<리스트 10>
+<리스트 10> MediaStyle 형식의 노티피케이션.
 
 
 <리스트 11>의 내용과 같이 `MediaSessionManager` 서비스를 얻은 후 세션을 만들고 그 세션으로 부터 토큰을 받아와 미디어 콘트롤에 설정한다.
@@ -211,7 +211,7 @@ mSession = mManager.createSession("microsoftware session");
 mController = MediaController.fromToken(mSession.getSessionToken());
 ````
 
-<리스트 11>
+<리스트 11> MediaController 환경 설정.
 
 
 세션의 `TransportControlsCallback`을 등록하고, 각 상황에 따라 다른 노티피케이션을 생성하도록 `onPlay`, `onPause` 등의 메서드를 오버라이드한다. <리스트 12>는 콜백을 등록하는 과정과 스켈레톤을 대략적으로 보이고 있으며 오버라이딩할 메서드 마다 개별적으로 노티피케이션을 설정하고 띄워야 한다. 예를 들어 `onPlay` 메서드는 재생과 관련된 노티피케이션을 띄워야 한다.
@@ -227,7 +227,7 @@ mSession.addTransportControlsCallback(new MediaSession.TransportControlsCallback
 }
 ````
 
-<리스트 12>
+<리스트 12> TransportControlsCallback의 개괄과 등록 과정.
 
 
 노티피케이션의 액션을 다른 서비스로 연결시키고 해당 서비스에서 `mController.getTransportControls().play()` 등을 호출 한다.
@@ -250,7 +250,7 @@ intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 startActivity(intent);
 ````
 
-<리스트 13>
+<리스트 13> 도큐먼트를 오버뷰에 추가하기 위해 FLAG_ACTIVITY_NEW_DOCUMENT 플래그를 사용.
 
 
 웹 사이트 문서도 오버뷰에 대응 할 수 있다. 웹 문서에 <리스트 14>와 같이 메타 데이터 `theme-color`를 설정하면 오버뷰 문서 속성으로 테마 색이 등록된다.
@@ -259,7 +259,7 @@ startActivity(intent);
 <meta name="theme-color" content="#3FFFB5">
 ````
 
-<리스트 14>
+<리스트 14> 오버뷰를 위한 메타데이터를 적용한 웹 페이지.
 
 
 ## 런타임 엔진 ART
@@ -284,7 +284,7 @@ GC의 구조가 변경되었기 때문에 `GC_FOR_ALLOC` 이벤트가 발생하�
 System.getProperty("java.vm.version")
 ````
 
-<리스트 15>
+<리스트 15> ART 환경 확인.
 
 
 버전 정보가 2.0.0 이상인 경우 명시적인 GC 호출이 필요가 줄어들었다. 버전 정보에 따라 GC 호출을 제외하자.
@@ -298,7 +298,7 @@ ART의 채택에 따라 기존에 잘 동작하던 JNI 앱의 동작에 문제�
 $ adb shell setprop debug.checkjni 1
 ````
 
-<리스트 16>
+<리스트 16> JNI 디버깅 모드 활성화.
 
 
 환경이 설정된 후 JNI 코드가 포함된 앱을 수행할 때 시스템은 종종 <리스트 17>과 같이 경고나 에러 메시지를 출력된다.
@@ -317,7 +317,8 @@ I
 E VM aborting
 ````
 
-<리스트 17>
+<리스트 17> 향상된 디버깅 메시지.
+
 
 향상된 디버그 모드를 이용하여 예상되는 JNI 문제를 해결하자.
 
@@ -339,7 +340,7 @@ Object 클래스의 필드 속성이 private으로 변경되었다. Object 필�
   android:protectionLevel="signature" />
 ````
 
-<리스트 18>
+<리스트 18> 커스텀 퍼미션의 보안 레벨은 인증키를 기준으로.
 
 
 안드로이드 5.0부터 커스텀 퍼미션은 동일한 사인키를 가진 앱에서만 사용할 수 있도록 변경되었다. 커스텀 퍼미션을 사용할 때는 <리스트 18>과 같이 `android:protectionLevel="signature" `를 설정하여야 한다.
@@ -358,7 +359,7 @@ Intent intent = new Intent(MICROSOFTWARE_BINDING);
 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 ````
 
-<리스트 19>
+<리스트 19> 에러가 발생하는 암묵적 서비스 바인딩.
 
 
 롤리팝에서 제대로 된 바인드는 <리스트 19>와 같다.
@@ -368,7 +369,7 @@ Intent intent = new Intent(this, MicroSoftwareService.class);
 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 ````
 
-<리스트 19>
+<리스트 19> 롤리팝에서 권장하는 명시적 서비스 바인딩.
 
 
 ## 머터리얼 디자인
@@ -396,7 +397,7 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 </style>
 ````
 
-<리스트 20>
+<리스트 20> 다양한 안드로이드 버전을 위한 테마 Theme.AppCompat의 확장.
 
 
 ### 액션바의 폐기
@@ -415,7 +416,7 @@ dependencies {
 }
 ````
 
-<리스트 21>
+<리스트 21> appcompat 라이브러의 의존성 추가.
 
 
 툴바를 사용하기 위해서는 먼저 액티비티는 `ActionBarActivity`를 상속받고 테마는 `Theme.AppCompat`를 상속받아야 한다.
@@ -432,7 +433,7 @@ dependencies {
     android:background="?attr/colorPrimary" />
 ````
 
-<리스트 22>
+<리스트 22> 액션바와 달리 레이아웃 요소의 하나인 툴바.
 
 
 레이아웃에 `Toolbar`를 추가한 후 액티비티에 연결하는 방법은 두가지가 있다.
@@ -453,7 +454,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ````
 
-<리스트 23>
+<리스트 23> setSupportActionBar를 이용한 툴바의 사용.
 
 
 툴바를 활용하는 또 다른 방법은 툴바의 `setOnMenuItemClickListener`와 `inflateMenu`를 이용하는 것이다.
@@ -481,7 +482,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ````
 
-<리스트 24>
+<리스트 24> 액션바와 상관없는 독자적인 툴바의 사용.
 
 
 ### 네비게이션 드로어 변경하기
@@ -526,7 +527,7 @@ public void onCreate(Bundle savedInstanceState) {
 </android.support.v4.widget.DrawerLayout>
 ````
 
-<리스트 25>
+<리스트 25> 머터리얼 디자인에 맞추어 변경돈 드로어 레이아웃.
 
 
 `DrawerLayout`을 루트 레이아웃으로 변경하고 `Toolbar`와 어플리케이션 UI를 속에 내포하는 형태로 레이아웃을 변경한다.
