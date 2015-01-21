@@ -45,7 +45,7 @@ JobService mJobService = (JobScheduler) context.getSystemService(Context.JOB_SCH
 mJobService.scheduleJob(job);
 ````
 
-더 상세한 `JobInfo` 파라미터를 파악하려 JobInfo.Builder(https://developer.android.com/reference/android/app/job/JobInfo.Builder.html) 를 참고하라.
+더 상세한 `JobInfo` 파라미터를 하려면 JobInfo.Builder(https://developer.android.com/reference/android/app/job/JobInfo.Builder.html) 를 참고하라.
 
 ### JobService 확장하기
 
@@ -132,7 +132,7 @@ $ adb bugreport > bugreport.txt
  * `setPriority()` - 노티피케이션의 우선 순위를 변경할 수 있어 덜 중요한 정보와 더 중요한 정보를 분리할 수 있다. `PRIORITY_MAX`와 `PRIORITY_HIGH`의 경우에는 작게 떠 있는 화면으로 뜨게 되며 노티피케이션이 소리나 진동을 갖게 된다.
  * `addPerson()` - 노티피케이션의 대상을 한 사람 이상 설정할 수 있다. 특정 사람에게 노티를 보낼 수도 있고 여러 사람에게 중요한 노티를 보낼 수도 있다.
 
-상세 카테고리와 우선 순위는 Notification(http://developer.android.com/reference/android/app/Notification.html)을 참고한다.
+상세 카테고리와 우선 순위는 Notification(http://developer.android.com/reference/android/app/Notification.html) 을 참고한다.
 
 ### 단아한 아이콘
 
@@ -446,4 +446,4 @@ public void onCreate(Bundle savedInstanceState) {
 
  * GDG 코리아 안드로이드 - https://plus.google.com/communities/100903743067544956282
  * 구글 개발자 코리아 블로그 - http://googledevkr.blogspot.kr/
- * 페이스북 커뮤니티 안뜨로이드 팁팁팁 - https://www.facebook.com/groups/junsle
+ * 페이스북 커뮤니티 안드로이드 팁팁팁 - https://www.facebook.com/groups/junsle
