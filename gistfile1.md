@@ -127,7 +127,13 @@ $ adb bugreport > bugreport.txt
 <리스트 7> 버그리포트를 통해 웨이크 히스토리를 추출
 
 
-참고 : 추출된 버그리포트의 분석을 돕는 툴로 구글이 공개한 'Battery Historian(https://github.com/google/battery-historian)'이 있지만, 현재 제대로 동작하지 않고 있다. 이후 리포지토리의 업데이트를 확인해 적용하도록 한다.
+추출된 버그리포트의 분석을 위해 구글이 공개한 'Battery Historian(https://github.com/google/battery-historian)'을 사용한다. 리포지토리에서 historian.py를 다운로드 받아 적절한 곳에 설치한 후 <리스트 8>의 커맨드를 입력한다.
+
+````
+python historian.py bugreport.txt > bugreport.html 
+````
+
+<리스트 8> Battery Historian를 HTML 리포트를 생성
 
 
 ## 노티피케이션
@@ -163,7 +169,7 @@ $ adb bugreport > bugreport.txt
 
 ### 단아한 아이콘
 
-롤리팝에서는 노티피케이션 아이콘의 정책도 변경됐다. 스몰 아이콘의 색상을 흰색과 투명색만 쓸 수 있는 제약이 생겼다. 현재는 애플리케이션의 타겟 버전과 단말기의 환경에 따라 다르게 보이지만 롤리팝 이후의 환경을 고려할 때 스몰 아이콘은 흰색과 투명색으로만 디자인 하는 것이 적절하다. 롤리팝의 스몰 아이콘은 `setColor`를 호출해 배경 색상을 정할 수 있으니 단색 아이콘과 배경 색상의 조화를 고려하는 것이 좋다(<리스트 8> 참고).
+롤리팝에서는 노티피케이션 아이콘의 정책도 변경됐다. 스몰 아이콘의 색상을 흰색과 투명색만 쓸 수 있는 제약이 생겼다. 현재는 애플리케이션의 타겟 버전과 단말기의 환경에 따라 다르게 보이지만 롤리팝 이후의 환경을 고려할 때 스몰 아이콘은 흰색과 투명색으로만 디자인 하는 것이 적절하다. 롤리팝의 스몰 아이콘은 `setColor`를 호출해 배경 색상을 정할 수 있으니 단색 아이콘과 배경 색상의 조화를 고려하는 것이 좋다(<리스트 9> 참고).
 
 ````
 NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -172,10 +178,10 @@ builder.setColor(color);
 Notification notif = builder.build();
 ````
 
-<리스트 8> 배경 색상이 등록된 노티피케이션
+<리스트 9> 배경 색상이 등록된 노티피케이션
 
 
-`NotificationCompat`은 구 버전 단말에서도 사용할 수 있도록 호환성 라이브러리에 추가된 노티피케이션 객체이다. 호환성 라이브러리를 사용하기 위해서는 `build.gralde` 파일에 <리스트 9>에 기술된 의존성을 추가해야 한다.
+`NotificationCompat`은 구 버전 단말에서도 사용할 수 있도록 호환성 라이브러리에 추가된 노티피케이션 객체이다. 호환성 라이브러리를 사용하기 위해서는 `build.gralde` 파일에 <리스트 10>에 기술된 의존성을 추가해야 한다.
 
 ````
 dependencies {
@@ -183,12 +189,12 @@ dependencies {
 }
 ````
 
-<리스트 9> `appcompat` 라이브러리 의존성 등록
+<리스트 10> `appcompat` 라이브러리 의존성 등록
 
 
 ### RemoteControlClient의 폐기
 
-`RemoteControlClient`가 폐기됨에 따라 음악 재생 앱 등은 노티피케이션 변경이 요구된다. <리스트 10>처럼 노티피케이션 스타일 `Notification.MediaStyle`을 생성하고 `Notification.Builder`의 스타일로 등록해 이용한다.
+`RemoteControlClient`가 폐기됨에 따라 음악 재생 앱 등은 노티피케이션 변경이 요구된다. <리스트 11>처럼 노티피케이션 스타일 `Notification.MediaStyle`을 생성하고 `Notification.Builder`의 스타일로 등록해 이용한다.
 
 ````
 Notification.Builder builder = new Notification.Builder(this)
@@ -199,10 +205,10 @@ Notification.Builder builder = new Notification.Builder(this)
     .setStyle(new Notification.MediaStyle());
 ````
 
-<리스트 10> `MediaStyle` 형식의 노티피케이션
+<리스트 11> `MediaStyle` 형식의 노티피케이션
 
 
-<리스트 11>과 같이 `MediaSessionManager` 서비스를 얻은 후 세션을 만들고, 그 세션으로부터 토큰을 받아와 미디어 컨트롤에 설정한다.
+<리스트 12>과 같이 `MediaSessionManager` 서비스를 얻은 후 세션을 만들고, 그 세션으로부터 토큰을 받아와 미디어 컨트롤에 설정한다.
 
 ````
 mManager = (MediaSessionManager) getSystemService(Context.MEDIA_SESSION_SERVICE);
@@ -210,10 +216,10 @@ mSession = mManager.createSession("microsoftware session");
 mController = MediaController.fromToken(mSession.getSessionToken());
 ````
 
-<리스트 11> `MediaController` 환경 설정
+<리스트 12> `MediaController` 환경 설정
 
 
-세션의 `TransportControlsCallback`을 등록하고, 각 상황에 따라 다른 노티피케이션을 생성하도록 `onPlay`, `onPause` 등의 메소드를 오버라이드한다. <리스트 12>는 콜백을 등록하는 과정과 스켈레톤을 대략적으로 보여준다. 오버라이딩할 메소드마다 개별적으로 노티피케이션을 설정하고 띄워야 한다. 예를 들어 `onPlay` 메소드는 재생과 관련된 노티피케이션을 띄워야 한다.
+세션의 `TransportControlsCallback`을 등록하고, 각 상황에 따라 다른 노티피케이션을 생성하도록 `onPlay`, `onPause` 등의 메소드를 오버라이드한다. <리스트 13>은 콜백을 등록하는 과정과 스켈레톤을 대략적으로 보여준다. 오버라이딩할 메소드마다 개별적으로 노티피케이션을 설정하고 띄워야 한다. 예를 들어 `onPlay` 메소드는 재생과 관련된 노티피케이션을 띄워야 한다.
 
 ````
 mSession.addTransportControlsCallback(new MediaSession.TransportControlsCallback() {
@@ -226,7 +232,7 @@ mSession.addTransportControlsCallback(new MediaSession.TransportControlsCallback
 }
 ````
 
-<리스트 12> `TransportControlsCallback`의 개괄과 등록 과정
+<리스트 13> `TransportControlsCallback`의 개괄과 등록 과정
 
 
 노티피케이션의 액션을 다른 서비스로 연결시키고 해당 서비스에서 `mController.getTransportControls().play()` 등을 호출한다.
@@ -241,7 +247,7 @@ mSession.addTransportControlsCallback(new MediaSession.TransportControlsCallback
 <그림 3> 오버뷰(overview), 최근 문서(작업, 탭)를 3D 박스로 표현한다.
 
 
-새로운 도큐먼트를 생성하기 위해서는 <리스트 13> 처럼  `android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT` 플래그를 포함한 액티비티를 호출한다.
+새로운 도큐먼트를 생성하기 위해서는 <리스트 14> 처럼  `android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT` 플래그를 포함한 액티비티를 호출한다.
 
 ````
 Intent intent = new Intent(this, MicroSoftware.class);
@@ -249,16 +255,16 @@ intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 startActivity(intent);
 ````
 
-<리스트 13> 도큐먼트를 오버뷰에 추가하기 위해 `FLAG_ACTIVITY_NEW_DOCUMENT` 플래그를 사용
+<리스트 14> 도큐먼트를 오버뷰에 추가하기 위해 `FLAG_ACTIVITY_NEW_DOCUMENT` 플래그를 사용
 
 
-웹사이트 문서도 오버뷰에 대응할 수 있다. 웹 문서에 <리스트 14>와 같이 메타 데이터 `theme-color`를 설정하면 오버뷰 문서 속성으로 테마 색이 등록된다.
+웹사이트 문서도 오버뷰에 대응할 수 있다. 웹 문서에 <리스트 15>와 같이 메타 데이터 `theme-color`를 설정하면 오버뷰 문서 속성으로 테마 색이 등록된다.
 
 ````
 <meta name="theme-color" content="#3FFFB5">
 ````
 
-<리스트 14> 오버뷰를 위한 메타데이터 적용 웹페이지
+<리스트 15> 오버뷰를 위한 메타데이터 적용 웹페이지
 
 
 ## 런타임 엔진 ART
@@ -277,13 +283,13 @@ startActivity(intent);
 
 ### 성급한 GC 최적화
 
-GC의 구조가 변경됐기 때문에 `GC_FOR_ALLOC` 이벤트가 발생하는 빈도를 줄이기 위해 명시적으로 `System.gc()`를 호출할 필요가 없어졌다. 현재 환경이 달빅이 아닌 ART인 것을 환영하기 위해 <리스트 15>의 커맨드를 이용해서 버전 정보를 얻는다.
+GC의 구조가 변경됐기 때문에 `GC_FOR_ALLOC` 이벤트가 발생하는 빈도를 줄이기 위해 명시적으로 `System.gc()`를 호출할 필요가 없어졌다. 현재 환경이 달빅이 아닌 ART인 것을 환영하기 위해 <리스트 16>의 커맨드를 이용해서 버전 정보를 얻는다.
 
 ````
 System.getProperty("java.vm.version")
 ````
 
-<리스트 15> ART 환경 확인
+<리스트 16> ART 환경 확인
 
 
 버전 정보가 2.0.0 이상인 경우 명시적인 GC 호출의 필요가 줄어들었다. 버전 정보에 따라 GC 호출을 제외하자.
@@ -297,10 +303,10 @@ ART의 채택에 따라 기존에 잘 동작하던 JNI 앱의 동작에 문제�
 $ adb shell setprop debug.checkjni 1
 ````
 
-<리스트 16> JNI 디버깅 모드 활성화
+<리스트 17> JNI 디버깅 모드 활성화
 
 
-환경이 설정된 후 JNI 코드가 포함된 앱을 수행할 때 시스템은 종종 <리스트 17>과 같이 경고나 에러 메시지를 출력한다.
+환경이 설정된 후 JNI 코드가 포함된 앱을 수행할 때 시스템은 종종 <리스트 18>과 같이 경고나 에러 메시지를 출력한다.
 
 ````
 W JNI WARNING: method declared to return 'Ljava/lang/String;' returned '[B'
@@ -316,7 +322,7 @@ I
 E VM aborting
 ````
 
-<리스트 17> 향상된 디버깅 메시지
+<리스트 18> 향상된 디버깅 메시지
 
 
 향상된 디버그 모드를 이용해 예상되는 JNI 문제를 해결하자.
@@ -339,10 +345,10 @@ E VM aborting
   android:protectionLevel="signature" />
 ````
 
-<리스트 18> 커스텀 퍼미션의 보안 레벨은 인증키를 기준으로 한다.
+<리스트 19> 커스텀 퍼미션의 보안 레벨은 인증키를 기준으로 한다.
 
 
-안드로이드 롤리팝부터 커스텀 퍼미션은 동일한 사인키를 가진 앱에서만 사용할 수 있도록 변경됐다. 커스텀 퍼미션을 사용할 때는 <리스트 18>과 같이 `android:protectionLevel="signature" `를 설정해야 한다.
+안드로이드 롤리팝부터 커스텀 퍼미션은 동일한 사인키를 가진 앱에서만 사용할 수 있도록 변경됐다. 커스텀 퍼미션을 사용할 때는 <리스트 19>와 같이 `android:protectionLevel="signature" `를 설정해야 한다.
 
 만일 같은 퍼미션을 사용하고 있는 앱이 다른 사인키를 가지고 있다면 `INSTALL_FAILED_DUPLICATE_PERMISSION` 에러 메시지와 함께 설치가 거부된다. 이 변경 사항은 앱의 `targetSDK` 버전과는 무관하며 롤리팝 디바이스에서는 강제로 적용되는 사항이다.
 
@@ -351,24 +357,24 @@ E VM aborting
 
 ## 명시적인 서비스 바인드
 
-서비스 바인드를 할 때 명시적인 인텐트만 가능하도록 바뀌었다. <리스트 19>와 같이 암묵적인 바인드를 요청할 경우에는 실행시간 예외가 발생한다.
+서비스 바인드를 할 때 명시적인 인텐트만 가능하도록 바뀌었다. <리스트 20>과 같이 암묵적인 바인드를 요청할 경우에는 실행시간 예외가 발생한다.
 
 ````
 Intent intent = new Intent(MICROSOFTWARE_BINDING);
 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 ````
 
-<리스트 19> 에러가 발생하는 암묵적 서비스 바인딩
+<리스트 20> 에러가 발생하는 암묵적 서비스 바인딩
 
 
-롤리팝에서 제대로 된 바인드는 <리스트 19>와 같다.
+롤리팝에서 제대로 된 바인드는 <리스트 21>과 같다.
 
 ````
 Intent intent = new Intent(this, MicroSoftwareService.class);
 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 ````
 
-<리스트 19> 롤리팝에서 권장하는 명시적 서비스 바인딩
+<리스트 21> 롤리팝에서 권장하는 명시적 서비스 바인딩
 
 
 ## 머터리얼 디자인
@@ -396,7 +402,7 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 </style>
 ````
 
-<리스트 20> 다양한 안드로이드 버전을 위한 테마 Theme.AppCompat의 확장
+<리스트 22> 다양한 안드로이드 버전을 위한 테마 Theme.AppCompat의 확장
 
 
 ### 액션바의 폐기
@@ -415,7 +421,7 @@ dependencies {
 }
 ````
 
-<리스트 21> appcompat 라이브러의 의존성 추가
+<리스트 23> appcompat 라이브러의 의존성 추가
 
 
 툴바를 사용하기 위해서는 먼저 액티비티는 `ActionBarActivity`를 상속받고 테마는 `Theme.AppCompat`를 상속받아야 한다.
@@ -432,7 +438,7 @@ dependencies {
     android:background="?attr/colorPrimary" />
 ````
 
-<리스트 22> 액션바와 달리 레이아웃 요소의 하나인 툴바
+<리스트 24> 액션바와 달리 레이아웃 요소의 하나인 툴바
 
 
 레이아웃에 `Toolbar`를 추가한 후 액티비티에 연결하는 방법은 두 가지가 있다.
@@ -453,7 +459,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ````
 
-<리스트 23> `setSupportActionBar`를 이용한 툴바의 사용
+<리스트 25> `setSupportActionBar`를 이용한 툴바의 사용
 
 
 툴바를 활용하는 또 다른 방법은 툴바의 `setOnMenuItemClickListener`와 `inflateMenu`를 이용하는 것이다.
@@ -481,7 +487,7 @@ public void onCreate(Bundle savedInstanceState) {
 }
 ````
 
-<리스트 24> 액션바와 상관없는 독자적인 툴바의 사용
+<리스트 26> 액션바와 상관없는 독자적인 툴바의 사용
 
 
 ### 네비게이션 드로어 변경하기
@@ -490,7 +496,7 @@ public void onCreate(Bundle savedInstanceState) {
 
 <그림 7> 머터리얼 디자인 네비게이션 드로어
 
-롤리팝의 네비게이션 드로어는 화면 전체를 가리는 형태다. 이렇게 드로어가 화면 전체를 가리기 위해서는 <리스트 25>와 같이 레이아웃에서 `DrawLayout`이 포함되도록 바꿔야 한다.
+롤리팝의 네비게이션 드로어는 화면 전체를 가리는 형태다. 이렇게 드로어가 화면 전체를 가리기 위해서는 <리스트 27>과 같이 레이아웃에서 `DrawLayout`이 포함되도록 바꿔야 한다.
 
 ````
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -525,7 +531,7 @@ public void onCreate(Bundle savedInstanceState) {
 </android.support.v4.widget.DrawerLayout>
 ````
 
-<리스트 25> 머터리얼 디자인에 맞춰 변경된 드로어 레이아웃
+<리스트 27> 머터리얼 디자인에 맞춰 변경된 드로어 레이아웃
 
 
 `DrawerLayout`을 루트 레이아웃으로 변경하고 `Toolbar`와 어플리케이션 UI를 속에 내포하는 형태로 레이아웃을 변경한다.
