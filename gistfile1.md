@@ -126,6 +126,9 @@ $ adb bugreport > bugreport.txt
 
 <리스트 7> 버그리포트를 통해 웨이크 히스토리를 추출
 
+![](https://raw.githubusercontent.com/dalinaum/writing/master/historian.png)
+
+<그림 2> 히스토리언 HTML 리포트
 
 추출된 버그리포트의 분석을 위해 구글이 공개한 'Battery Historian(https://github.com/google/battery-historian)'을 사용한다. 리포지토리에서 historian.py를 다운로드 받아 적절한 곳에 설치한 후 <리스트 8>의 커맨드를 입력한다.
 
@@ -133,7 +136,7 @@ $ adb bugreport > bugreport.txt
 python historian.py bugreport.txt > bugreport.html 
 ````
 
-<리스트 8> Battery Historian를 HTML 리포트를 생성
+<리스트 8> Battery Historian을 사용하여 HTML 리포트를 생성
 
 
 ## 노티피케이션
@@ -142,7 +145,7 @@ python historian.py bugreport.txt > bugreport.html
 
 ![](http://developer.android.com/images/versions/notification-headsup.png)
 
-<그림 2> 헤즈업 노티피케이션. 우선 순위가 높은 노티피케이션을 작은 창으로 표시한다.
+<그림 3> 헤즈업 노티피케이션. 우선 순위가 높은 노티피케이션을 작은 창으로 표시한다.
 
 
 ### 락스크린의 프라이버시
@@ -244,7 +247,7 @@ mSession.addTransportControlsCallback(new MediaSession.TransportControlsCallback
 
 ![](http://developer.android.com/images/versions/recents_screen_2x.png)
 
-<그림 3> 오버뷰(overview), 최근 문서(작업, 탭)를 3D 박스로 표현한다.
+<그림 4> 오버뷰(overview), 최근 문서(작업, 탭)를 3D 박스로 표현한다.
 
 
 새로운 도큐먼트를 생성하기 위해서는 <리스트 14> 처럼  `android.content.Intent.FLAG_ACTIVITY_NEW_DOCUMENT` 플래그를 포함한 액티비티를 호출한다.
@@ -275,7 +278,7 @@ startActivity(intent);
 
 ![](http://upload.wikimedia.org/wikipedia/commons/2/25/ART_view.png)
 
-<그림 4> 달빅과 ART의 차이. 달빅은 DEX 파일에서 최적화된 Odex를 얻고 ART는 실행파일 ELF를 얻는다.
+<그림 5> 달빅과 ART의 차이. 달빅은 DEX 파일에서 최적화된 Odex를 얻고 ART는 실행파일 ELF를 얻는다.
 
 
 새로운 방식이 적용됐기 때문에 앱에 따라 문제가 발생할 수 있다. AOT와 과련해서는 안드로이드 플랫폼과 관련된 이슈가 많기 때문에 안드로이드 이슈 리스트(https://code.google.com/p/android/issues/list)를 참조하며 문제를 해결하자.
@@ -381,7 +384,7 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 ![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7S1dwdXNVa1B1OHc/components_cards6.png)
 
-<그림 5> 머터리얼 디자인
+<그림 6> 머터리얼 디자인
 
 구글의 통합 디자인 언어 머터리얼 디자인이 안드로이드에 통합됐다. 잉크와 종이를 컨셉으로 한 다양한 UX 컨셉이 도입됐고, 그에 따라 변화된 부분도 많이 존재한다. `appcompat` 라이브러리를 통해 기존 안드로이드 버전에서도 머터리얼 디자인을 부분적으로 적용할 수 있게 됐다.
 
@@ -409,7 +412,7 @@ bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 ![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7UnNtdkNxY05oelk/layout_structure_toolbars2.png)
 
-<그림 6> 툴바. 액션바를 대체하는 유연한 앱 바 컴포넌트
+<그림 7> 툴바. 액션바를 대체하는 유연한 앱 바 컴포넌트
 
 안드로이드 허니콤(3.0)부터 적용됐던 액션바가 폐기됐다. 액션바는 구글이 허니콤 이후 정착시키려고 했던 가이드라인의 핵심이었다. 그 때문에 가이드라인을 강제하기 위해 커스터마이징이 어렵게 돼 있었다. 액션바가 폐기되고 툴바가 들어온 것은 머터리얼 디자인에서 조금 더 다양한 시도를 할 수 있도록 문을 열어준 것으로 볼 수 있다.
 
@@ -494,7 +497,7 @@ public void onCreate(Bundle savedInstanceState) {
 
 ![](http://material-design.storage.googleapis.com/publish/v_2/material_ext_publish/0Bx4BSt6jniD7NzhpQzI0R21kOTg/layout_structure_sidenav_structure1.png)
 
-<그림 7> 머터리얼 디자인 네비게이션 드로어
+<그림 8> 머터리얼 디자인 네비게이션 드로어
 
 롤리팝의 네비게이션 드로어는 화면 전체를 가리는 형태다. 이렇게 드로어가 화면 전체를 가리기 위해서는 <리스트 27>과 같이 레이아웃에서 `DrawLayout`이 포함되도록 바꿔야 한다.
 
