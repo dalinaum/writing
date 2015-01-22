@@ -126,9 +126,6 @@ $ adb bugreport > bugreport.txt
 
 <리스트 7> 버그리포트를 통해 웨이크 히스토리를 추출
 
-![](https://raw.githubusercontent.com/dalinaum/writing/master/historian.png)
-
-<그림 2> 히스토리언 HTML 리포트
 
 추출된 버그리포트의 분석을 위해 구글이 공개한 'Battery Historian(https://github.com/google/battery-historian)'을 사용한다. 리포지토리에서 historian.py를 다운로드 받아 적절한 곳에 설치한 후 <리스트 8>의 커맨드를 입력한다.
 
@@ -137,6 +134,12 @@ python historian.py bugreport.txt > bugreport.html
 ````
 
 <리스트 8> Battery Historian을 사용하여 HTML 리포트를 생성
+
+
+![](https://raw.githubusercontent.com/dalinaum/writing/master/historian.png)
+
+<그림 2> 히스토리언 HTML 리포트
+
 
 
 ## 노티피케이션
