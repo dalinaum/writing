@@ -123,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
 ````
 <리스트 4> 반응형 Hello World
 
-<리스트 4>의 코드에서 `Observable`과 `Subscriber`를 주목하라. 데이터의 강을 만드는 옵저버블(Observable)과 그것을 하나씩 소화하는 서브스크라이버(Subscriber)가 반응형 프로그래밍의 가장 핵심적인 요소이다. 옵저버블은 데이터를 만드는 생산자로 3가지 행동을 한다.
+<리스트 4>의 코드에서 `Observable`과 `Subscriber`를 주목하라. 데이터의 강을 만드는 옵저버블(Observable)과 그것을 하나씩 소화하는 서브스크라이버(Subscriber)가 반응형 프로그래밍의 가장 핵심적인 요소이다. 옵저버블은 데이터를 만드는 생산자로 세가지 행동을 한다.
 
 ````
  1. onNext - 새로운 데이터를 전달한다.
@@ -145,8 +145,12 @@ Observable.create(new Observable.OnSubscribe<String>() {
 ````
 <리스트 6> Hello World 옵저버블
 
-<리스트 6>의 옵저버블은 `Hello RxAndroid !!`란 데이터를 전달하고(onNext) 이내 끝났다는 신호(onCompleted)를 전달한다. 이를 그림으로 도식하면 <그림 1>과 같다.
+<리스트 6>의 옵저버블은 `Hello RxAndroid !!`란 데이터를 전달하고(onNext) 이내 끝났다는 신호(onCompleted)를 전달한다.
+
+옵저버블의 세가지 행동들을 도식하면 <그림 1>과 같은 모양이 된다.
 
 ![](https://raw.githubusercontent.com/dalinaum/writing/master/observable-flow.png)
-
 <그림 1> 옵저버블 액션 흐름
+
+<그림 1> 상단의 흐름은 세번 데이터를 전달받고(onNext) 정상 종료(onCompleted)인 경우이고 하단의 흐름은 두번 데이터를 전달받고(onNext) 에러가 발생(onError)한 경우다.
+
