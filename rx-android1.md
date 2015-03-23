@@ -22,6 +22,8 @@ by Jake Wharton
 ````
 <리스트 1> 제이크 와튼의 트위터 (https://twitter.com/jakewharton/status/385898996884971520)
 
+물론 세상에는 은탄환은 없고 반응형 프로그래밍 역시 장단점은 존재할 것이다. 제이크 와튼의 표현은 그만큼 RxJava, RxAndroid가 유연하고 강력하다는 의미일 것이다.
+
 ## Hello RxAndroid
 
 안드로이드에서 리액티브 프로그래밍을 사용하기 위해서는 먼저 Gradle 환경 설정을 해야한다. 안드로이드 스튜디오서 프로젝트를 만들고 `app` 디렉토리의 `build.gradle` 파일을 열자.
