@@ -218,5 +218,21 @@ simpleObservable
         }
     });
 ````
-<리스트 9> `onNext`, `onError`, `onCompleted`를 개별적으로 다루는 구성
+<리스트 9> `onNext`, `onError`, `onCompleted`를 모두 다루는 구성
+
+````
+simpleObservable
+    .subscribe(new Action1<String>() {
+        @Override
+        public void call(String text) {
+            ((TextView) findViewById(R.id.textView)).setText(text);
+        }
+    }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+
+        }
+    });
+````
+<리스트 10> `onNext`, `onError`를 다루는 구성
 
