@@ -277,14 +277,7 @@ simpleObservable
 
 <리스트 12>는 옵저버블의 스트림을 대문자로 변환하는 (사실은 새로운 스트림을 만드는) Map을 호출하고 그것을 서브스크라이버에 연결하는 것을 보여준다.
 
-`simpleObservable`은 문자열 하나만 전달하는 간단한 옵저버블인데 옵저버블을 쉽게 만들 수 있게 도와주는 유틸리티 메서드가 있다.
-
-````
-Observable<String> simpleObservable = Observable.just("Hello RxAndroid");
-````
-<리스트 13> 단일 데이터로 옵저버블을 생성하는 유틸리티 `Observable.just`
-
-Map을 이용할 때는 같은 타입으로만 변경해야 하는 것은 아니다.
+Map을 이용할 때는 같은 타입으로만 변경해야 할 수 있는 것은 아니다.
 
 ````
 simpleObservable
@@ -301,4 +294,125 @@ simpleObservable
         }
     });
 ````
-<리스트 14> `String` 스트림을 `Integer` 스트림으로 변환하는 Map
+<리스트 13> `String` 스트림을 `Integer` 스트림으로 변환하는 Map
+
+<리스트 13>는 문자열의 갯수를 확인하여 Integer로 반환하는 Map이다.
+
+## 단일 데이터, 컬렉션을 옵저버블 생성을 위한 유틸리티
+
+`simpleObservable`은 문자열 하나만 전달하는 간단한 옵저버블인데 옵저버블을 쉽게 만들 수 있게 도와주는 유틸리티 메서드가 있다.
+
+````
+Observable<String> simpleObservable = Observable.just("Hello RxAndroid");
+````
+<리스트 14> 단일 데이터로 옵저버블을 생성하는 유틸리티 `Observable.just`
+
+연속적인 데이터를 처리하기 위한 유틸리티 `Observable.from`도 있다. 이 유틸리티를 이용하면 배열이나 컬렉션을 보다 간편하게 처리할 수 있다.
+
+## 번잡한 문법을 람다로 간단히
+
+기존의 자바 문법에서 RxAndroid (RxJava) 프로그래밍을 할 때 로직과 상관없는 요소들이 많이 발견된다. 어노테이션, 클래스 선언, 메서드 선언 등의 요소들은 코드에서 반복된다. 이런 반복들은 자바 8에서 도입된 람다를 도입하면 제거할 수 있고 코드가 간결해진다.
+
+````
+Observable<String> simpleObservable = Observable.just("Hello Lambda!!");
+simpleObservable
+    .map(text -> text.length())
+    .subscribe(
+        length -> ((TextView) findViewById(R.id.textView)).setText("length: " + length));
+````
+<리스트 15> 람다로 간략화 시킨 코드
+
+자바 코드가 매우 간결해진 것을 볼 수 있다. 람다 문법이 생소한 독자를 위해 코드 단위로 비교해보자.
+
+````
+.map(new Func1<String, Integer>() {
+        @Override
+        public Integer call(String text) {
+            return text.length();
+        }
+    })
+````
+<리스트 16> 람다를 적용하기 전 map 코드
+
+람다는 단일 메서드를 가지고 있는 경우만 간략화 할 수 있다. 여기에서 메서드 인자 부분 이전의 번잡한 내용을 지워보자.
+
+````
+.map((String text) -> {
+        return text.length();
+    })
+````
+<리스트 17> 익명 객체 부분을 제거한 람다 map 코드
+
+인자의 타입을 추론할 수 있다면 생략할 수 있다.
+
+````
+.map((text) -> {
+        return text.length();
+    })
+````
+<리스트 18> 익명 객체 부분과 타입을 제거한 람다 map 코드
+
+인자가 하나인 경우에는 괄호를 생략할 수 있다.
+
+````
+.map(text -> text.length())
+````
+<리스트 19> 블록을 생략한 람다 map 코드
+
+람다 블록 내에 문장이 하나이고 리턴값을 가진다면 블록, 세미콜론, 리턴 키워드를 지울 수 있다.
+
+람다의 단 한가지 단점은 자바 8이상에서만 쓸 수 있다는 점이다. 안드로이드는 자바 8을 지원하지 못하며 람다를 쓰기 위해서는 이전 버전에서 람다를 쓸 수 있게 하는 포팅 라이브러리를 사용해야 한다.
+
+![](https://raw.githubusercontent.com/dalinaum/writing/master/retrolambda.png)
+<리스트 20> 자바 8 람다 코드를 자바 7 바이트 코드로 번역하는 레트로 람다
+
+람다 포팅 중 안드로이드에 적합한 라이브러리는 레트로람다(Retrolambda) 라이브러리이다. (https://github.com/orfjackal/retrolambda) 레트로람다 라이브러리는 속도 상의 약점이 없으며 기술 선도 기업들이 2013년 부터 안드로이드에 테스트한 라이브러리이다.
+
+레트로람다 라이브러리를 사용하기 위해서는 그래들 코드의 설정의 수정이 필요하다.
+
+````
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "rx.android.gdg.kr.java8lambda"
+        minSdkVersion 11
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'io.reactivex:rxandroid:0.24.0'
+}
+````
+<리스트 21> 레트로람다를 적용한 그래들 파일의 예
+
+자바 8과 옛 버전을 함께 쓰기 위해서는 Gradle Retrolambda Plugin 프로젝트(https://github.com/evant/gradle-retrolambda)를 참조하라.
