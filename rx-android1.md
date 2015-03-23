@@ -147,10 +147,36 @@ Observable.create(new Observable.OnSubscribe<String>() {
 
 <리스트 6>의 옵저버블은 `Hello RxAndroid !!`란 데이터를 전달하고(onNext) 이내 끝났다는 신호(onCompleted)를 전달한다.
 
-옵저버블의 세가지 행동들을 도식하면 <그림 1>과 같은 모양이 된다.
+옵저버블의 세가지 행동들이 만드는 스트림을 도식해 보면 <그림 1>과 같은 모양이 된다.
 
 ![](https://raw.githubusercontent.com/dalinaum/writing/master/observable-flow.png)
 <그림 1> 옵저버블 액션 흐름
 
 <그림 1> 상단의 흐름은 세번 데이터를 전달받고(onNext) 정상 종료(onCompleted)인 경우이고 하단의 흐름은 두번 데이터를 전달받고(onNext) 에러가 발생(onError)한 경우다.
+
+서브스크라이버는 옵저버블이 만드는 스트림에 응대하여 처리하도록 인터페이스가 구성되어 있다.
+
+````
+simpleObservable
+        .subscribe(new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+                Log.d(TAG, "complete!");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "error: " + e.getMessage());
+            }
+
+            @Override
+            public void onNext(String text) {
+                ((TextView) findViewById(R.id.textView)).setText(text);
+            }
+        });
+````
+<리스트 7> 서브스크라이버 예
+
+`Subscriver`는 3가지 메서드를 오버라이드하도록 구성되어 있는데 개별 메서드의 역할은 옵저버블의 해당 메서드와 동일하다. 스트림의 데이터의 유형별로 대칭되는 서브스크라이버의 인터페이스가 대응하는 것이다.
+
 
