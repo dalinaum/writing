@@ -12,7 +12,6 @@
  2. 반응형 프로그래밍으로 사용자 경험 향상.
  3. 자유자재로 다루는 비동기 프로그래밍.
 
-
 마이크로소프트는 옵저버 패턴과 LINQ 스타일 문법을 확장하여 비동기처리와 이벤트 기반 프로그래밍을 할 수 있다는 것을 발견한다. 연구진은 이를 반응형 확장(Rx, Reactive Extensions)을 공개하였다. (https://msdn.microsoft.com/en-us/data/gg577609) 반응성 확장은 곧 여러 기술기반 회사들의 호응을 얻었다. 넷플릭스는 Rx를 자바(RxJava)로 이식했고 사운드클라우드는 안드로이드(RxAndroid)로 이식했다. 깃헙(Github)은 이 기술을 아이폰과 맥(RxCocoa)으로 포팅했다.
 
 이런 분위기 속에 안드로이드 오픈소스의 락스타 제이크 와튼(Jake Wharton)은 본인의 트위터에 <리스트 1>의 문장을 남겼다. 반응형 프로그래밍을 한다면 안드로이드 플랫폼 내의 많은 요소들과 여러 라이브러리들이 더 이상 필요가 없다는 이야기다.
@@ -236,3 +235,70 @@ simpleObservable
 ````
 <리스트 10> `onNext`, `onError`를 다루는 구성
 
+## 데이터 가공 Map
+
+![](https://raw.githubusercontent.com/dalinaum/writing/master/map.png)
+<그림 2> Map의 스트림 흐름
+
+`Map`은 한 데이터를 다른 데이터로 바꾸는 `오퍼레이터`이다. 원본의 데이터는 변경하지 않고 새로운 스트림을 만들어 낸다. <그림 2>는 스트림의 데이터를 10 씩 곱을 하는 예이다.
+
+이렇게 Map을 사용하려면 인자 하나를 받아 값을 10배를 곱해 반환하는 메서드를 Map에 전달해야 한다.
+
+````
+.map(new Func1<Integer, Integer>() {
+    @Override
+    public Integer call(Integer value) {
+        return value * 10;
+    }
+})
+````
+<리스트 11> 값을 10배 씩 구하는 Map
+
+RxAndroid를 사용하여 앱을 개발할 때 미리 준비된 다양한 RxJava 오퍼레이터를 사용할 수 있다. (http://reactivex.io/documentation/operators.html) 반응형 프로그래밍에서 오퍼레이터는 기존에 작성된 메서드를 재사용하여 전체 값을 변경할 수 있는 도구를 제공한다. 값을 재사용 가능한 함수를 이용해서 가공한다는 부분에서 함수형 프로그래밍과 일맥상통하는 부분이 있다.
+
+문자열을 대문자로 바꾸는 것도 쉽게 구현할 수 있다.
+
+````
+simpleObservable
+    .map(new Func1<String, String>() {
+        @Override
+        public String call(String text) {
+            return text.toUpperCase();
+        }
+    })
+    .subscribe(new Action1<String>() {
+        @Override
+        public void call(String text) {
+            ((TextView) findViewById(R.id.textView)).setText(text);
+        }
+    });
+````
+<리스트 12> 문자열을 대문자로 바꾸는 Map
+
+<리스트 12>는 옵저버블의 스트림을 대문자로 변환하는 (사실은 새로운 스트림을 만드는) Map을 호출하고 그것을 서브스크라이버에 연결하는 것을 보여준다.
+
+`simpleObservable`은 문자열 하나만 전달하는 간단한 옵저버블인데 옵저버블을 쉽게 만들 수 있게 도와주는 유틸리티 메서드가 있다.
+
+````
+Observable<String> simpleObservable = Observable.just("Hello RxAndroid");
+````
+<리스트 13> 단일 데이터로 옵저버블을 생성하는 유틸리티 `Observable.just`
+
+Map을 이용할 때는 같은 타입으로만 변경해야 하는 것은 아니다.
+
+````
+simpleObservable
+    .map(new Func1<String, Integer>() {
+        @Override
+        public Integer call(String text) {
+            return text.length();
+        }
+    })
+    .subscribe(new Action1<Integer>() {
+        @Override
+        public void call(Integer length) {
+            ((TextView) findViewById(R.id.textView)).setText("length: " + length);
+        }
+    });
+````
+<리스트 14> `String` 스트림을 `Integer` 스트림으로 변환하는 Map
