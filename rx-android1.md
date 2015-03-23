@@ -58,7 +58,7 @@ dependencies {
 ````
 <리스트 2> app/build.gradle 설정파일
 
-<리스트 2> 설정에서 주목할 부분은 의존성 부분이다.
+그래들 설정에서 의존성 부분이 중요하다.
 
 ````
 dependencies {
@@ -160,25 +160,62 @@ Observable.create(new Observable.OnSubscribe<String>() {
 
 ````
 simpleObservable
-        .subscribe(new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-                Log.d(TAG, "complete!");
-            }
+    .subscribe(new Subscriber<String>() {
+        @Override
+        public void onCompleted() {
+            Log.d(TAG, "complete!");
+        }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "error: " + e.getMessage());
-            }
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, "error: " + e.getMessage());
+        }
 
-            @Override
-            public void onNext(String text) {
-                ((TextView) findViewById(R.id.textView)).setText(text);
-            }
-        });
+        @Override
+        public void onNext(String text) {
+            ((TextView) findViewById(R.id.textView)).setText(text);
+        }
+    });
 ````
 <리스트 7> 서브스크라이버 예
 
 `Subscriber`는 3가지 메서드를 오버라이드하도록 구성되어 있고 개별 메서드의 역할은 옵저버블의 해당 메서드와 동일하다. 스트림의 데이터의 유형별로 대칭되는 서브스크라이버의 인터페이스가 대응하는 것이다. <리스트 7>의 구성은 정상적으로 데이터가 왔을 때 텍스트 뷰의 항목을 수정하고 종료나 에러가 발생할 때 로그를 남긴다.
 
+## 단출한 서브스크라이버
+
+서브스크라이버를 구성할 때 항상 `onCompleted`, `onError`, `onNext`를 다루는 것은 불편하다. 편의를 위해 사용하지 않는 구성을 누락할 수 있다.
+
+````
+    simpleObservable
+        .subscribe(new Action1<String>() {
+            @Override
+            public void call(String text) {
+                ((TextView) findViewById(R.id.textView)).setText(text);
+            }
+        });
+````
+<리스트 8> 단출한 서브스크라이버
+
+<리스트 8>의 서브스크라이버는 `onNext`의 경우만 다루고 있다. `onNext`, `onError`를 다루는 것과 `onNext`, `onError`, `onCompleted`를 모두 다루는 구성이 준비되어 있다.
+
+````
+simpleObservable
+    .subscribe(new Action1<String>() {
+        @Override
+        public void call(String text) {
+            ((TextView) findViewById(R.id.textView)).setText(text);
+        }
+    }, new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+
+        }
+    }, new Action0() {
+        @Override
+        public void call() {
+
+        }
+    });
+````
+<리스트 9> `onNext`, `onError`, `onCompleted`를 개별적으로 다루는 구성
 
