@@ -71,7 +71,7 @@ dependencies {
 ````
 <리스트 3> 의존성 설정
 
-두가지 외부 의존성이 있는 것을 볼 수 있다. `appcompat-v7`와 `rxandroid`이다. 안드로이드도 자바 환경이기 때문에 `rxjava`를 포함하지 않는 것에 의아할 수 있다. RxAndorid는 RxJava에 의존성을 가지고 있다. RxAndroid를 의존성에 포함하면 안드로이드 개발을 재개할 수 있다.
+두가지 외부 의존성이 있는 것을 볼 수 있다. `appcompat-v7`와 `rxandroid`이다. 안드로이드도 자바 환경이기 때문에 `rxjava`를 포함하지 않는 것에 의아할 수 있다. RxAndorid는 RxJava에 대한 의존성을 가지고 있고 RxAndroid를 의존성에 포함하면 안드로이드 개발 환경에 문제가 없다.
 
 이제 첫 번째 반응형 안드로이드 앱 코드를 만들어보자.
 
