@@ -12,9 +12,11 @@
  2. 반응형 프로그래밍으로 사용자 경험 향상.
  3. 자유자재로 다루는 비동기 프로그래밍.
 
-마이크로소프트는 옵저버 패턴과 LINQ 스타일 문법을 확장하여 비동기처리와 이벤트 기반 프로그래밍을 할 수 있다는 것을 발견한다. 연구진은 이를 반응형 확장(Rx, Reactive Extensions)을 공개하였다. (https://msdn.microsoft.com/en-us/data/gg577609) 반응성 확장은 곧 여러 기술기반 회사들의 호응을 얻었다. 넷플릭스는 Rx를 자바(RxJava)로 이식했고 사운드클라우드는 안드로이드(RxAndroid)로 이식했다. 깃헙(Github)은 이 기술을 아이폰과 맥(RxCocoa)으로 포팅했다.
+여러 이슈를 처리해줄 적절한 도구는 닷넷 진영에서 등장했다. 마이크로소프트는 옵저버 패턴과 LINQ 스타일 문법을 확장하여 비동기처리와 이벤트 기반 프로그래밍을 할 수 있다는 것을 발견한다. 연구진은 이를 반응형 확장(Rx, Reactive Extensions)을 공개하였다. (https://msdn.microsoft.com/en-us/data/gg577609)
 
-이런 분위기 속에 안드로이드 오픈소스의 락스타 제이크 와튼(Jake Wharton)은 본인의 트위터에 <리스트 1>의 문장을 남겼다. 반응형 프로그래밍을 한다면 안드로이드 플랫폼 내의 많은 요소들과 여러 라이브러리들이 더 이상 필요가 없다는 이야기다.
+반응성 확장은 곧 여러 기술 기반 회사들의 호응을 얻었다. 넷플릭스(Netflix)는 Rx를 자바(RxJava) 환경에 옮겼고, 사운드클라우드(SoundColud)는 RxJava를 안드로이드까지 (RxAndroid) 확장시켰다. 깃헙(Github)은 Rx가 아이폰과 맥(RxCocoa)에서 작동되도록 만들었다.
+
+여러 기술 업체가 Rx를 미는 분위기 속에 안드로이드 오픈소스의 락스타 제이크 와튼(Jake Wharton)은 본인의 트위터에 <리스트 1>의 문장을 남겨 논란을 일으켰다. 반응형 프로그래밍을 한다면 안드로이드 플랫폼 내의 많은 요소들과 여러 라이브러리들이 더 이상 필요가 없다는 이야기다.
 
 ````
 "Using RxJava to replace loaders and internal lib to replace fragments/activities. All that's left is views, android.animation.*, and bliss."
@@ -22,7 +24,7 @@ by Jake Wharton
 ````
 <리스트 1> 제이크 와튼의 트위터 (https://twitter.com/jakewharton/status/385898996884971520)
 
-물론 세상에는 은탄환은 없고 반응형 프로그래밍 역시 장단점은 존재할 것이다. 제이크 와튼의 표현은 그만큼 RxJava, RxAndroid가 유연하고 강력하다는 의미일 것이다.
+물론 세상에는 은탄환은 없고 반응형 프로그래밍 역시 장단점은 존재할 것이다. 이 말은 RxAndroid(RxJava)가 그가 다른 대안을 알아보고 싶지 않을 정도로 강력하고 유연하다는 의미로 받아들일 수 있을 것이다.
 
 ## Hello RxAndroid
 
@@ -129,7 +131,7 @@ public class MainActivity extends ActionBarActivity {
 
 ````
  1. onNext - 새로운 데이터를 전달한다.
- 2. onCompleted - 종료 신호.
+ 2. onCompleted - 스트림의 종료.
  3. onError - 에러 신호를 전달한다
 ````
 <리스트 5> 옵저버블의 3가지 행동
@@ -156,7 +158,7 @@ Observable.create(new Observable.OnSubscribe<String>() {
 
 <그림 1> 상단의 흐름은 세번 데이터를 전달받고(onNext) 정상 종료(onCompleted)인 경우이고 하단의 흐름은 두번 데이터를 전달받고(onNext) 에러가 발생(onError)한 경우다.
 
-서브스크라이버는 옵저버블이 만드는 스트림에 응대하여 처리하도록 인터페이스가 구성되어 있다.
+서브스크라이버는 옵저버블이 만드는 스트림에 응대하여 처리할 수 있게 대칭적으로 인터페이스가 구성되어 있다.
 
 ````
 simpleObservable
@@ -183,7 +185,7 @@ simpleObservable
 
 ## 편의를 위한 단출한 서브스크라이버
 
-서브스크라이버를 구성할 때 항상 `onCompleted`, `onError`, `onNext`를 다루는 것은 불편하다. 편의를 위해 사용하지 않는 구성을 누락할 수 있다.
+서브스크라이버를 구성할 때 항상 `onCompleted`, `onError`, `onNext`를 다루는 것은 불편하다. 편의를 위해 사용하지 않는 구성이 누락된 인터페이스가 제공된다.
 
 ````
     simpleObservable
@@ -240,7 +242,7 @@ simpleObservable
 ![](https://raw.githubusercontent.com/dalinaum/writing/master/map.png)
 <그림 2> Map의 스트림 흐름
 
-map은 한 데이터를 다른 데이터로 바꾸는 `오퍼레이터`이다. 원본의 데이터는 변경하지 않고 새로운 스트림을 만들어 낸다. <그림 2>는 스트림의 데이터를 10 씩 곱을 하는 예이다.
+map은 한 데이터를 다른 데이터로 바꾸는 `오퍼레이터`이다. 원본의 데이터는 변경하지 않고 새로운 스트림을 만들어 낸다. <그림 2>는 스트림의 데이터를 각각 10 씩 곱을 하는 예이다.
 
 이렇게 map 사용하려면 인자 하나를 받아 값을 10배를 곱해 반환하는 메서드를 map 전달해야 한다.
 
@@ -309,7 +311,7 @@ Observable<String> simpleObservable = Observable.just("Hello RxAndroid");
 
 ## 번잡한 문법을 람다로 간단히
 
-기존의 자바 문법에서 RxAndroid (RxJava) 프로그래밍을 할 때 로직과 상관없는 요소들이 많이 발견된다. 어노테이션, 클래스 선언, 메서드 선언 등의 요소들은 코드에서 반복된다. 이런 반복들은 자바 8에서 도입된 람다를 도입하면 제거할 수 있고 코드가 간결해진다.
+기존의 자바 문법에서 RxAndroid (RxJava) 프로그래밍을 할 때 로직과 상관없는 요소들이 많이 발견된다. 어노테이션, 클래스 선언, 메서드 선언 등의 요소들이 코드에서 반복된다. 이런 반복들은 자바 8에서 도입된 람다를 사용하면 손 쉽게 제거할 수 있고 코드가 간결해 가독성이 높아진다.
 
 ````
 Observable<String> simpleObservable = Observable.just("Hello Lambda!!");
@@ -320,7 +322,7 @@ simpleObservable
 ````
 <리스트 15> 람다로 간략화 시킨 코드
 
-자바 코드가 매우 간결해진 것을 볼 수 있다. 람다 문법이 생소한 독자를 위해 코드 단위로 비교해보자.
+자바 코드가 매우 간결해진 것을 볼 수 있다. 람다 문법이 생소한 독자를 위해 코드 단위로 비교하며 설명한다.
 
 ````
 .map(new Func1<String, Integer>() {
@@ -421,4 +423,4 @@ dependencies {
 
 다음 시간에는 다양한 옵저버블과 오퍼레이터 등을 합성하여 사용자 인터페이스와 상호작용하는 방법을 알아보며 사용자 인터페이스 코드를 구조화할 것이다.
 
-여기 사용된 코드 예제는 Github 저장소: https://github.com/GDG-Korea/HelloRx 에서 볼 수 있다.
+여기 사용된 코드 예제는 Github 저장소 (https://github.com/GDG-Korea/HelloRx) 에서 볼 수 있다.
