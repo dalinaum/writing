@@ -127,7 +127,9 @@ public class MainActivity extends ActionBarActivity {
 ````
 <리스트 4> 반응형 Hello World
 
-<리스트 4>의 코드에서 `Observable`과 `Subscriber`를 주목하라. 데이터의 강을 만드는 옵저버블(Observable)과 그것을 하나씩 소화하는 서브스크라이버(Subscriber)가 반응형 프로그래밍의 가장 핵심적인 요소이다. 옵저버블은 데이터를 만드는 생산자로 세가지 행동을 한다.
+<리스트 4>의 코드에서 `Observable`과 `Subscriber`를 주목하라. 데이터의 강을 만드는 옵저버블(Observable)과 강에서 그것을 하나씩 건지는 서브스크라이버(Subscriber)가 반응형 프로그래밍의 가장 핵심적인 요소이다.
+
+옵저버블은 데이터를 제공하는 생산자로 세가지 유형의 행동을 한다.
 
 ````
  1. onNext - 새로운 데이터를 전달한다.
