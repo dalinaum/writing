@@ -11,6 +11,9 @@
  * [코어 안드로이드 오디오 캡쳐](https://github.com/hackedteam/core-android-audiocapture)
  * [코어 안드로이드 마켓](https://github.com/hackedteam/core-android-market)
 
+앞의 둘은 단말에 설치되어 해킹을 시도하는 도구이고 마지막은 악성 코드를 좀더 배포하기 쉽게 하기 위한
+도구입니다.
+
 코어 안드로이드는 안드로이드 버전의 RCS (원격 제어 시스템, Remote Controll System)입니다. 원격
 제어 시스템은 네이트 메신저 등에 있는 원격 접속 앱과 비슷한 기능을 할 수 있는 앱이라고 보면 됩니다. 이
 도구는 자체적인 루팅 루틴을 가지고 있어 관리자 권한을 가지고 휴대 단말 내의 여러 정보를 훔칠 수 있습니다.
